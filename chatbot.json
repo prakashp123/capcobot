@@ -2,6 +2,6 @@
 {
   "name": "chatbot",
   "description": "chatbot webhook",
-  "repository": "",
+  "repository": "https://github.com/prakashp123/capcobot",
   "keywords": ["chatbot", "api.ai", "natural language"]
 }
