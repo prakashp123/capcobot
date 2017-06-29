@@ -73,18 +73,19 @@ def makeWebhookResult(req):
         ht = True
     else:
         pt = True
-    if (subject == "customer" or subject == "product") and kpitype != "":
+    if (subject == "customer" or subject == "product") and kpitype:
         speech = "This is an invalid statement. You cannot see the " + kpitype + " " + kpi + " for a " + subject
     elif (ht and pkpi) or (pt and hkpi):
         speech = "This is an invalid statement. You cannot get predictive results for this statistic."
     elif subject == "product" and ht and \
-            (kpi != "product processing cost" or kpi != "purchase frequency" or kpi != "product servicing fee" or kpi != "non-interest revenue"):
+            (
+                            kpi != "product processing cost" or kpi != "purchase frequency" or kpi != "product servicing fee" or kpi != "non-interest revenue"):
         speech = "This is an invalid statement. Are you interested in products?"
     elif subject == "product" and pt and pkpi != "churn rate":
         speech = "This is an invalid statement. Are you interested in statistics about products?"
-    elif (subject == "enterprise" or subject == "segment") and ht and bkpi != "" and hkpi == "":
+    elif (subject == "enterprise" or subject == "segment") and ht and bkpi and not hkpi:
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
-    elif (subject == "enterprise" or subject == "segment") and ht and kpitype != "" and \
+    elif (subject == "enterprise" or subject == "segment") and ht and kpitype and \
             (kpi != "purchase frequency" or
                      kpi != "period since last purchase" or kpi != "product servicing frequency"):
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
@@ -93,14 +94,14 @@ def makeWebhookResult(req):
                      kpi != "churn rate" or kpi != "lifetime duration" or kpi != "referral/word of mouth value"):
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     elif (subject == "enterprise" or subject == "segment") and \
-            pt and kpitype != "" and (kpi == "churn rate" or kpi == "lifetime duration"):
+            pt and kpitype and (kpi == "churn rate" or kpi == "lifetime duration"):
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     else:
-        if kpitype != "":
-            speech = "Here is the list for the " + kpitype + kpi + " for each " + subject + " for the next " + timeframe + ":"
+        if kpitype:
+            speech = "Here is the list for the " + kpitype + kpi + " for each " + subject + " for the " + timeframe + ":"
         else:
-            speech = "Here is the list for the " + kpi + " for each " + subject + " for the next " + timeframe + ":"
-    speech = "Hello World!"
+            speech = "Here is the list for the " + kpi + " for each " + subject + " for the " + timeframe + ":"
+
     print("Response:")
     print(speech)
 
