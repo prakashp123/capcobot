@@ -73,18 +73,31 @@ def makeWebhookResult(req):
         ht = True
     else:
         pt = True
-    if (subject == "customer" or subject == "product") and kpitype:
+    if not (kpi or kpitype or timeframe or subject):
+        speech = "I didn't quite understand that. Are you interested in customers, segments, enterprises, or products?"
+    elif (subject == "customer" or subject == "product") and kpitype:
         speech = "This is an invalid statement. You cannot see the " + kpitype + " " + kpi + " for a " + subject
-    elif (ht and pkpi) or (pt and hkpi):
+    elif pt and hkpi:
         speech = "This is an invalid statement. You cannot get predictive results for this statistic."
+    elif ht and pkpi:
+        speech = "This is an invalid statement. You cannot get historical results for this statistic."
     elif subject == "product" and ht and \
             (
-                            kpi != "product processing cost" or kpi != "purchase frequency" or kpi != "product servicing fee" or kpi != "non-interest revenue"):
+                                    kpi != "product processing cost" or kpi != "purchase frequency" or kpi != "product servicing fee" or kpi != "non-interest revenue"):
         speech = "This is an invalid statement. Are you interested in products?"
     elif subject == "product" and pt and pkpi != "churn rate":
         speech = "This is an invalid statement. Are you interested in statistics about products?"
     elif (subject == "enterprise" or subject == "segment") and ht and bkpi and not hkpi:
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
+    elif (subject == "enterprise" or subject == "segment") and ht and ((kpi != "purchase frequency" or
+                                                                                kpi != "period since last purchase" or kpi != "product servicing frequency")) and not kpitype:
+        speech = "Would you like to know the average results or the sum results?"
+    elif (subject == "enterprise" or subject == "segment") and pt and (
+    (kpi != 'customers with the highest probability to churn' or
+             kpi != 'customers with the highest probability to upsell/cross-sell' or
+             kpi != 'customers with the highest referral/word of mouth value'
+     or kpi != 'customers with the longest predicted lifetime duration')) and not kpitype:
+        speech = "Would you like to know the average results or the sum results?"
     elif (subject == "enterprise" or subject == "segment") and ht and kpitype and \
             (kpi != "purchase frequency" or
                      kpi != "period since last purchase" or kpi != "product servicing frequency"):
@@ -99,6 +112,8 @@ def makeWebhookResult(req):
     else:
         if kpitype:
             speech = "Here is the list for the " + kpitype + kpi + " for each " + subject + " for the " + timeframe + ":"
+        elif kpi == "most profitable customers" or kpi == "least profitable customers":
+            speech = "Here is the list for the " + kpi + " for the " + timeframe
         else:
             speech = "Here is the list for the " + kpi + " for each " + subject + " for the " + timeframe + ":"
 
