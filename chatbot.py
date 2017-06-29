@@ -2,14 +2,9 @@
 
 from __future__ import print_function
 
-from urllib import urlencode, urlopen
-
 from future.standard_library import install_aliases
 
 install_aliases()
-
-import urllib.parse
-import urllib.request
 
 import json
 import os
@@ -105,7 +100,7 @@ def makeWebhookResult(req):
             speech = "Here is the list for the " + kpitype + kpi + " for each " + subject + " for the next " + timeframe + ":"
         else:
             speech = "Here is the list for the " + kpi + " for each " + subject + " for the next " + timeframe + ":"
-
+    speech = "Hello World!"
     print("Response:")
     print(speech)
 
