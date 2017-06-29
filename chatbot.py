@@ -99,8 +99,8 @@ def makeWebhookResult(req):
      or kpi != 'customers with the longest predicted lifetime duration')) and not kpitype:
         speech = "Would you like to know the average results or the sum results?"
     elif (subject == "enterprise" or subject == "segment") and ht and kpitype and \
-            (kpi != "purchase frequency" or
-                     kpi != "period since last purchase" or kpi != "product servicing frequency"):
+            (kpi == "purchase frequency" or
+                     kpi == "period since last purchase" or kpi == "product servicing frequency"):
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     elif (subject == "enterprise" or subject == "segment") and pt and \
             (kpi != "future value" or kpi != "customer lifetime value" or
@@ -111,7 +111,7 @@ def makeWebhookResult(req):
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     else:
         if kpitype:
-            speech = "Here is the list for the " + kpitype + kpi + " for each " + subject + " for the " + timeframe + ":"
+            speech = "Here is the list for the " + kpitype + " " + kpi + " for each " + subject + " for the " + timeframe + ":"
         elif kpi == "most profitable customers" or kpi == "least profitable customers":
             speech = "Here is the list for the " + kpi + " for the " + timeframe
         else:
