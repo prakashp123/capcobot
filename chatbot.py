@@ -34,10 +34,13 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "list":
+    if req.get("result").get("action") != "list" or req.get("result").get("action") != "getWelcome":
         return {}
+    if req.get("result").get("action") == "list":
+        res = makeWebhookResult(req)
+    else:
+        res = getWelcomeWebhook(req)
 
-    res = makeWebhookResult(req)
     return res
 
 
@@ -132,6 +135,21 @@ def checkForError(kpi,kpitype,timeframe,subject,pt,ht,hkpi,pkpi,bkpi):
     print(speech)
 
     return speech
+
+def getWelcomeWebhook(req):
+    result = req.get("result")
+    if result == "getWelcome":
+        speech = "Hi! This is the CapcoBot. Please enter your question, or type 'filter' for more options."
+    else:
+        speech = "Sorry, I couldn't understand your sentence."
+
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {},
+        "contextOut": [],
+        "source": "chatbot"
+    }
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
