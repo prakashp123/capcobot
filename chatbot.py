@@ -34,7 +34,7 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "list" or req.get("result").get("action") != "getWelcome":
+    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome":
         return {}
     if req.get("result").get("action") == "list":
         res = makeWebhookResult(req)
