@@ -73,6 +73,17 @@ def makeWebhookResult(req):
         ht = True
     else:
         pt = True
+
+    speech = checkForError(kpi,kpitype,timeframe,subject,pt,ht,hkpi,pkpi,bkpi)
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {},
+        "contextOut": [],
+        "source": "chatbot"
+    }
+
+def checkForError(kpi,kpitype,timeframe,subject,pt,ht,hkpi,pkpi,bkpi):
     if not (kpi or kpitype or timeframe or subject):
         speech = "I didn't quite understand that. Are you interested in customers, segments, enterprises, or products?"
     elif (subject == "customer" or subject == "product") and kpitype:
@@ -93,10 +104,10 @@ def makeWebhookResult(req):
                                                                                 kpi != "period since last purchase" or kpi != "product servicing frequency")) and not kpitype:
         speech = "Would you like to know the average results or the sum results?"
     elif (subject == "enterprise" or subject == "segment") and pt and (
-    (kpi != 'customers with the highest probability to churn' or
-             kpi != 'customers with the highest probability to upsell/cross-sell' or
-             kpi != 'customers with the highest referral/word of mouth value'
-     or kpi != 'customers with the longest predicted lifetime duration')) and not kpitype:
+            (kpi != 'customers with the highest probability to churn' or
+                     kpi != 'customers with the highest probability to upsell/cross-sell' or
+                     kpi != 'customers with the highest referral/word of mouth value'
+             or kpi != 'customers with the longest predicted lifetime duration')) and not kpitype:
         speech = "Would you like to know the average results or the sum results?"
     elif (subject == "enterprise" or subject == "segment") and ht and kpitype and \
             (kpi == "purchase frequency" or
@@ -120,14 +131,7 @@ def makeWebhookResult(req):
     print("Response:")
     print(speech)
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
-
+    return speech
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
