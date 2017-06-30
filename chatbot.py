@@ -138,7 +138,8 @@ def checkForError(kpi,kpitype,timeframe,subject,pt,ht,hkpi,pkpi,bkpi):
 
 def getWelcomeWebhook(req):
     result = req.get("result")
-    if result == "getWelcome":
+    action = result.get("action")
+    if action == "getWelcome":
         speech = "Hi! This is the CapcoBot. Please enter your question, or type 'filter' for more options."
     else:
         speech = "Sorry, I couldn't understand your sentence."
