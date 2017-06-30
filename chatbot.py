@@ -34,10 +34,12 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome":
+    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get("result").get("action") != "welcomeAnswer":
         return {}
     if req.get("result").get("action") == "list":
         res = makeWebhookResult(req)
+    elif req.get("result").get("action") == "welcomeAnswer":
+        res = getWelcomeAnswerWebhook(req)
     else:
         res = getWelcomeWebhook(req)
 
@@ -51,6 +53,18 @@ def makeWebhookResult(req):
     timeframe = parameters.get("timeframe")
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
+
+    speech = checkForError(kpi,kpitype,timeframe,subject)
+
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {},
+        "contextOut": [],
+        "source": "chatbot"
+    }
+
+def checkForError(kpi,kpitype,timeframe,subject):
     historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'purchase frequency',
                      'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
@@ -76,17 +90,6 @@ def makeWebhookResult(req):
         ht = True
     else:
         pt = True
-
-    speech = checkForError(kpi,kpitype,timeframe,subject,pt,ht,hkpi,pkpi,bkpi)
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
-
-def checkForError(kpi,kpitype,timeframe,subject,pt,ht,hkpi,pkpi,bkpi):
     if not (kpi or kpitype or timeframe or subject):
         speech = "I didn't quite understand that. Are you interested in customers, segments, enterprises, or products?"
     elif (subject == "customer" or subject == "product") and kpitype:
@@ -151,6 +154,39 @@ def getWelcomeWebhook(req):
         "contextOut": [],
         "source": "chatbot"
     }
+
+def getWelcomeAnswerWebhook(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    filter = parameters.get("filter")
+    kpi = parameters.get("kpi")
+    timeframe = parameters.get("timeframe")
+    subject = parameters.get("subject")
+    kpitype = parameters.get("kpi-type")
+    if (filter and kpi and kpitype and subject and timeframe) or (kpi and kpitype and subject and timeframe) or (kpi and timeframe and subject == "customer"):
+        speech = checkForError(kpi,kpitype,timeframe,subject)
+    elif filter and not (kpi or kpitype or subject or timeframe):
+        speech = "Let's get started! Are you interested in historical or predictive data?"
+    elif (filter and kpi) or (kpi and not (filter or kpitype or subject or timeframe)) :
+        speech = "Would you like to filter by " + kpi + "?"
+    elif (filter and kpitype)  or (kpitype and not (filter or kpi or subject or timeframe)):
+        speech = "Would you like to filter by " + kpitype + "?"
+    elif (filter and subject) or (subject and not (filter or kpitype or kpi or timeframe)):
+        speech = "Would you like to filter by " + subject + "?"
+    elif (filter and timeframe) or (timeframe and not (filter or kpitype or subject or kpi)):
+        speech = "Would you like to filter by " + timeframe + "?"
+    else:
+        speech = "I'm sorry, I did not understand your statement. Please enter your question or type 'filter' for more options."
+
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {},
+        "contextOut": [],
+        "source": "chatbot"
+    }
+
+
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
