@@ -34,12 +34,14 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get("result").get("action") != "welcomeAnswer":
+    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get("result").get("action") != "welcomeAnswer" and req.get("result").get("action") != "getFilterAnswer":
         return {}
     if req.get("result").get("action") == "list":
         res = makeWebhookResult(req)
     elif req.get("result").get("action") == "welcomeAnswer":
         res = getWelcomeAnswerWebhook(req)
+    elif req.get("result").get("action") == "getFilterAnswer":
+        res = getFilterAnswerWebhook(req)
     else:
         res = getWelcomeWebhook(req)
 
@@ -168,13 +170,13 @@ def getWelcomeAnswerWebhook(req):
     elif filter and not (kpi or kpitype or subject or timeframe):
         speech = "Let's get started! Are you interested in historical or predictive data?"
     elif (filter and kpi) or (kpi and not (filter or kpitype or subject or timeframe)) :
-        speech = "Would you like to filter by " + kpi + "?"
+        speech = "For which subject would you like to see these results?"
     elif (filter and kpitype)  or (kpitype and not (filter or kpi or subject or timeframe)):
-        speech = "Would you like to filter by " + kpitype + "?"
+        speech = "For which subject would you like to see these results?"
     elif (filter and subject) or (subject and not (filter or kpitype or kpi or timeframe)):
-        speech = "Would you like to filter by " + subject + "?"
+        speech = "Would you like to see historical or predictive data?"
     elif (filter and timeframe) or (timeframe and not (filter or kpitype or subject or kpi)):
-        speech = "Would you like to filter by " + timeframe + "?"
+        speech = "For which subject would you like to see these results?"
     else:
         speech = "I'm sorry, I did not understand your statement. Please enter your question or type 'filter' for more options."
 
@@ -186,7 +188,37 @@ def getWelcomeAnswerWebhook(req):
         "source": "chatbot"
     }
 
+def getFilterAnswerWebhook(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    kpi = parameters.get("kpi")
+    yesno = parameters.get("yes-no")
+    timeframe = parameters.get("timeframe")
+    subject = parameters.get("subject")
+    kpitype = parameters.get("kpi-type")
+    kpiTimeFilter = parameters.get("kpi-time-filter")
+    if kpi and timeframe and subject and kpitype:
+        speech = "Awesome! I have all the information I need." + checkForError(kpi,kpitype, timeframe, subject)
+    elif kpiTimeFilter == "historical":
+        speech = "How far back would you like to see results from?"
+    elif kpiTimeFilter == "predictive":
+        speech = "How far forward would you like to see results for?"
+    elif not kpi:
+        speech = "Which category of results are you interested in?"
+    elif not kpitype and (subject == "segment" or subject == "enterprise"):
+        speech = "Would you like to see average values or sum values?"
+    elif not subject:
+        speech = "For which subject would you like to see these results?"
+    else:
+        speech = "Please enter a valid timeframe"
 
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {},
+        "contextOut": [],
+        "source": "chatbot"
+    }
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
