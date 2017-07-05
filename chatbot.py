@@ -34,8 +34,10 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get("result").get("action") != "welcomeAnswer" \
-            and req.get("result").get("action") != "getFilterAnswer" and req.get("result").get("action") != "getTimeFilterAnswer" \
+    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get(
+            "result").get("action") != "welcomeAnswer" \
+            and req.get("result").get("action") != "getFilterAnswer" and req.get("result").get(
+        "action") != "getTimeFilterAnswer" \
             and req.get("result").get("action") != "getKpiFilterAnswer":
         return {}
     if req.get("result").get("action") == "list":
@@ -62,7 +64,7 @@ def makeWebhookResult(req):
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
 
-    speech = checkForError(kpi,kpitype,timeframe,subject)
+    speech = checkForError(kpi, kpitype, timeframe, subject)
 
     return {
         "speech": speech,
@@ -72,7 +74,8 @@ def makeWebhookResult(req):
         "source": "chatbot"
     }
 
-def checkForError(kpi,kpitype,timeframe,subject):
+
+def checkForError(kpi, kpitype, timeframe, subject):
     historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'purchase frequency',
                      'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
@@ -108,14 +111,17 @@ def checkForError(kpi,kpitype,timeframe,subject):
         speech = "This is an invalid statement. You cannot get historical results for this statistic."
     elif subject == "product" and ht and \
             (
-                                    kpi != "product processing cost" or kpi != "purchase frequency" or kpi != "product servicing fee" or kpi != "non-interest revenue"):
+                                    kpi != "product processing cost" or kpi != "purchase frequency"
+                        or kpi != "product servicing fee" or kpi != "non-interest revenue"):
         speech = "This is an invalid statement. Are you interested in products?"
     elif subject == "product" and pt and pkpi != "churn rate":
         speech = "This is an invalid statement. Are you interested in statistics about products?"
     elif (subject == "enterprise" or subject == "segment") and ht and bkpi and not hkpi:
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     elif (subject == "enterprise" or subject == "segment") and ht and ((kpi != "purchase frequency" or
-                                                                                kpi != "period since last purchase" or kpi != "product servicing frequency")) and not kpitype:
+                                                                                kpi != "period since last purchase" or
+                                                                                kpi != "product servicing frequency")) \
+            and not kpitype:
         speech = "Would you like to know the average results or the sum results?"
     elif (subject == "enterprise" or subject == "segment") and pt and (
             (kpi != 'customers with the highest probability to churn' or
@@ -136,7 +142,8 @@ def checkForError(kpi,kpitype,timeframe,subject):
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     else:
         if kpitype:
-            speech = "Here is the list for the " + kpitype + " " + kpi + " for each " + subject + " for the " + timeframe + ":"
+            speech = "Here is the list for the " + kpitype + " " + kpi + " for each " + subject + " for the " + \
+                     timeframe + ":"
         elif kpi == "most profitable customers" or kpi == "least profitable customers":
             speech = "Here is the list for the " + kpi + " for the " + timeframe
         else:
@@ -146,6 +153,7 @@ def checkForError(kpi,kpitype,timeframe,subject):
     print(speech)
 
     return speech
+
 
 def getWelcomeWebhook(req):
     result = req.get("result")
@@ -163,6 +171,7 @@ def getWelcomeWebhook(req):
         "source": "chatbot"
     }
 
+
 def getWelcomeAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -171,12 +180,15 @@ def getWelcomeAnswerWebhook(req):
     timeframe = parameters.get("timeframe")
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
-    if (filter and kpi and kpitype and subject and timeframe) or (kpi and kpitype and subject and timeframe) or (kpi and timeframe and (subject == "customer" or subject== "product")):
-        speech = checkForError(kpi,kpitype,timeframe,subject)
+    if (filter and kpi and kpitype and subject and timeframe) or \
+            (kpi and kpitype and subject and timeframe) or \
+            (kpi and timeframe and (subject == "customer" or subject == "product")):
+        speech = checkForError(kpi, kpitype, timeframe, subject)
     elif filter and not (kpi or kpitype or subject or timeframe):
         speech = "Let's get started! Are you interested in historical or predictive data?"
     else:
-        speech = "I'm sorry, I did not understand your statement. Please enter your question or type 'filter' for more options."
+        speech = "I'm sorry, I did not understand your statement. " \
+                 "Please enter your question or type 'filter' for more options."
 
     return {
         "speech": speech,
@@ -185,6 +197,7 @@ def getWelcomeAnswerWebhook(req):
         "contextOut": [],
         "source": "chatbot"
     }
+
 
 def getFilterAnswerWebhook(req):
     result = req.get("result")
@@ -195,7 +208,7 @@ def getFilterAnswerWebhook(req):
     kpitype = parameters.get("kpi-type")
     kpiTimeFilter = parameters.get("kpi-time-filter")
     if kpi and timeframe and subject and kpitype:
-        speech = "Awesome! I have all the information I need." + checkForError(kpi,kpitype, timeframe, subject)
+        speech = "Awesome! I have all the information I need." + checkForError(kpi, kpitype, timeframe, subject)
     elif kpiTimeFilter == "historical":
         speech = "How far back would you like to see results from?"
     elif kpiTimeFilter == "predictive":
@@ -211,13 +224,15 @@ def getFilterAnswerWebhook(req):
         "source": "chatbot"
     }
 
+
 def getTimeFilterAnswerWebhook(req):
     historicalTimeframe = ['past month', 'past week', 'today', 'past year', 'beginning of time']
     result = req.get("result")
     parameters = result.get("parameters")
     timeframe = parameters.get("timeframe")
     kpiTimeFilter = parameters.get("kpi-time-filter")
-    if timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
+    if timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or \
+            (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
         speech = "Awesome! What type of data are you interested in seeing?"
     else:
         speech = "This timeframe is not valid for " + kpiTimeFilter + " data. Please enter a valid timeframe."
@@ -229,6 +244,7 @@ def getTimeFilterAnswerWebhook(req):
         "contextOut": [],
         "source": "chatbot"
     }
+
 
 def getKpiFilterAnswer(req):
     result = req.get("result")
@@ -246,10 +262,12 @@ def getKpiFilterAnswer(req):
                      'customers with the highest referral/word of mouth value',
                      'customers with the longest predicted lifetime duration',
                      'churn rate', 'lifetime duration']
-    if (timeframe in historicalTimeframe and kpi in historicalKPI) or (timeframe not in historicalTimeframe and kpi in predictiveKPI):
+    if (timeframe in historicalTimeframe and kpi in historicalKPI) or (
+            timeframe not in historicalTimeframe and kpi in predictiveKPI):
         speech = "Excellent! For which subject would you like to see these results?"
     else:
-        speech = "You cannot see " + kpiTimeFilter + " data with this timeframe. Please select a different type of data."
+        speech = "You cannot see " + kpiTimeFilter + \
+                 " data with this timeframe. Please select a different type of data."
 
     return {
         "speech": speech,
@@ -258,6 +276,48 @@ def getKpiFilterAnswer(req):
         "contextOut": [],
         "source": "chatbot"
     }
+
+def getSubjectFilterAnswerWebhook(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    timeframe = parameters.get("timeframe")
+    kpi = parameters.get("kpi")
+    subject = parameters.get("parameters")
+    enterpriseKPI2 = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
+                     'non-interest revenue', 'interest revenue',
+                     'future value', 'customer lifetime value', 'referral/word of mouth value']
+    enterpriseKPI = ['purchase frequency','period since last purchase', 'product servicing fee', 'churn rate', 'lifetime duration']
+    productKPI = ['product processing cost', 'purchase frequency', 'non-interest revenue',
+                  'product servicing fee', 'churn rate']
+    if subject == "enterprise" or subject == "segment":
+        if kpi in enterpriseKPI2:
+            speech = "Would you like to see the average or sum value for this data?"
+        elif kpi in enterpriseKPI:
+            kpitype = ""
+            speech = "Awesome! I have all the information that I need" + checkForError(kpi,kpitype,timeframe,subject)
+        else:
+            speech = "The data is not supported for this subject. Please enter a different subject to view this data."
+    elif subject == "product":
+        if kpi in productKPI:
+            kpitype = ""
+            speech = "Awesome! I have all the information that I need" + checkForError(kpi, kpitype, timeframe, subject)
+        else:
+            speech = "The data is not supported for this subject. Please enter a different subject to view this data."
+    else:
+        kpitype = ""
+        speech = "Awesome! I have all the information that I need" + checkForError(kpi, kpitype, timeframe, subject)
+
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {},
+        "contextOut": [],
+        "source": "chatbot"
+    }
+
+
+
+
 
 
 
