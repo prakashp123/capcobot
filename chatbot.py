@@ -169,22 +169,6 @@ def getWelcomeAnswerWebhook(req):
         speech = checkForError(kpi,kpitype,timeframe,subject)
     elif filter and not (kpi or kpitype or subject or timeframe):
         speech = "Let's get started! Are you interested in historical or predictive data?"
-    elif filter and kpi and timeframe and (subject=="enterprise" or subject == "segment"):
-        speech = "Would you like to see average or sum values?"
-    elif filter and kpi and timeframe and not subject:
-        speech = "For which subject would you like to see these results?"
-    elif filter and kpi and subject and not timeframe:
-        speech = "For which timeframe would you like to see these results?"
-    elif filter and subject and timeframe and not kpi:
-        speech = "For which category would you like to see these results?"
-    elif (filter and kpi) or (kpi and not (filter or kpitype or subject or timeframe)) :
-        speech = "For which subject would you like to see these results?"
-    elif (filter and kpitype)  or (kpitype and not (filter or kpi or subject or timeframe)):
-        speech = "For which subject would you like to see these results?"
-    elif (filter and subject) or (subject and not (filter or kpitype or kpi or timeframe)):
-        speech = "Would you like to see historical or predictive data?"
-    elif (filter and timeframe) or (timeframe and not (filter or kpitype or subject or kpi)):
-        speech = "For which subject would you like to see these results?"
     else:
         speech = "I'm sorry, I did not understand your statement. Please enter your question or type 'filter' for more options."
 
