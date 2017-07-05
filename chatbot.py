@@ -285,7 +285,7 @@ def getSubjectFilterAnswerWebhook(req):
     parameters = result.get("parameters")
     timeframe = parameters.get("timeframe")
     kpi = parameters.get("kpi")
-    subject = parameters.get("parameters")
+    subject = parameters.get("subject")
     enterpriseKPI2 = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'non-interest revenue', 'interest revenue',
                      'future value', 'customer lifetime value', 'referral/word of mouth value']
