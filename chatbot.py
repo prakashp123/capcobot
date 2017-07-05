@@ -34,7 +34,7 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get("result").get("action") != "welcomeAnswer" and req.get("result").get("action") != "getFilterAnswer":
+    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get("result").get("action") != "welcomeAnswer" and req.get("result").get("action") != "getFilterAnswer" and req.get("result").get("action") != "getTimeFilterAnswer":
         return {}
     if req.get("result").get("action") == "list":
         res = makeWebhookResult(req)
@@ -42,6 +42,8 @@ def processRequest(req):
         res = getWelcomeAnswerWebhook(req)
     elif req.get("result").get("action") == "getFilterAnswer":
         res = getFilterAnswerWebhook(req)
+    elif req.get("result").get("action") == "getTimeFilterAnswer":
+        res = getTimeFilterAnswerWebhook(req)
     else:
         res = getWelcomeWebhook(req)
 
@@ -184,7 +186,6 @@ def getFilterAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
     kpi = parameters.get("kpi")
-    yesno = parameters.get("yes-no")
     timeframe = parameters.get("timeframe")
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
@@ -202,7 +203,7 @@ def getFilterAnswerWebhook(req):
     elif not subject:
         speech = "For which subject would you like to see these results?"
     else:
-        speech = "Please enter a valid timeframe"
+        speech = "Please enter a valid timeframe."
 
     return {
         "speech": speech,
@@ -211,6 +212,24 @@ def getFilterAnswerWebhook(req):
         "contextOut": [],
         "source": "chatbot"
     }
+
+def getTimeFilterAnswerWebhook(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    timeframe = parameters.get("timeframe")
+    if timeframe:
+        speech = "Awesome! What type of data are you interested in seeing?"
+    else:
+        speech = "Please enter a valid timeframe."
+
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {},
+        "contextOut": [],
+        "source": "chatbot"
+    }
+
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
