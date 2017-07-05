@@ -38,7 +38,8 @@ def processRequest(req):
             "result").get("action") != "welcomeAnswer" \
             and req.get("result").get("action") != "getFilterAnswer" and req.get("result").get(
         "action") != "getTimeFilterAnswer" \
-            and req.get("result").get("action") != "getKpiFilterAnswer":
+            and req.get("result").get("action") != "getKpiFilterAnswer" \
+            and req.get("result").get("action") != "getSubjectFilterAnswer":
         return {}
     if req.get("result").get("action") == "list":
         res = makeWebhookResult(req)
@@ -50,6 +51,8 @@ def processRequest(req):
         res = getTimeFilterAnswerWebhook(req)
     elif req.get("result").get("action") == "getKpiFilterAnswer":
         res = getKpiFilterAnswer(req)
+    elif req.get("result").get("action") == "getSubjectFilterAnswer":
+        res = getSubjectFilterAnswerWebhook(req)
     else:
         res = getWelcomeWebhook(req)
 
