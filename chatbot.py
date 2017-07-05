@@ -196,12 +196,6 @@ def getFilterAnswerWebhook(req):
         speech = "How far back would you like to see results from?"
     elif kpiTimeFilter == "predictive":
         speech = "How far forward would you like to see results for?"
-    elif not kpi:
-        speech = "Which category of results are you interested in?"
-    elif not kpitype and (subject == "segment" or subject == "enterprise"):
-        speech = "Would you like to see average values or sum values?"
-    elif not subject:
-        speech = "For which subject would you like to see these results?"
     else:
         speech = "Please enter a valid timeframe."
 
@@ -231,6 +225,36 @@ def getTimeFilterAnswerWebhook(req):
         "contextOut": [],
         "source": "chatbot"
     }
+
+def getKpiFilterAnswer(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    timeframe = parameters.get("timeframe")
+    kpi = parameters.get("kpi")
+    kpiTimeFilter = parameters.get("kpi-time-filter")
+    historicalTimeframe = ['past month', 'past week', 'today', 'past year', 'beginning of time']
+    historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
+                     'purchase frequency',
+                     'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
+    predictiveKPI = ['future value', 'customer lifetime value', 'referral/word of mouth value',
+                     'customers with the highest probability to churn',
+                     'customers with the highest probability to upsell/cross-sell',
+                     'customers with the highest referral/word of mouth value',
+                     'customers with the longest predicted lifetime duration',
+                     'churn rate', 'lifetime duration']
+    if (timeframe in historicalTimeframe and kpi in historicalKPI) or (timeframe not in historicalTimeframe and kpi in predictiveKPI):
+        speech = "Excellent! For which subject would you like to see these results?"
+    else:
+        speech = "You cannot see " + kpiTimeFilter + " data with this timeframe. Please select a different type of data."
+
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "data": {},
+        "contextOut": [],
+        "source": "chatbot"
+    }
+
 
 
 if __name__ == '__main__':
