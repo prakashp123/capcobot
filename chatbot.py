@@ -214,13 +214,15 @@ def getFilterAnswerWebhook(req):
     }
 
 def getTimeFilterAnswerWebhook(req):
+    historicalTimeframe = ['past month', 'past week', 'today', 'past year', 'beginning of time']
     result = req.get("result")
     parameters = result.get("parameters")
     timeframe = parameters.get("timeframe")
-    if timeframe:
+    kpiTimeFilter = parameters.get("kpi-time-filter")
+    if timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
         speech = "Awesome! What type of data are you interested in seeing?"
     else:
-        speech = "Please enter a valid timeframe."
+        speech = "This timeframe is not valid for " + kpiTimeFilter + " data. Please enter a valid timeframe."
 
     return {
         "speech": speech,
