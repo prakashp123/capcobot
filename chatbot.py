@@ -69,6 +69,10 @@ def makeWebhookResult(req):
 
     speech = checkForError(kpi, kpitype, timeframe, subject)
 
+    return returnStatement(speech)
+
+
+def returnStatement(speech):
     return {
         "speech": speech,
         "displayText": speech,
@@ -166,13 +170,7 @@ def getWelcomeWebhook(req):
     else:
         speech = "Sorry, I couldn't understand your sentence."
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
+    return returnStatement(speech)
 
 
 def getWelcomeAnswerWebhook(req):
@@ -193,13 +191,7 @@ def getWelcomeAnswerWebhook(req):
         speech = "I'm sorry, I did not understand your statement. " \
                  "Please enter your question or type 'filter' for more options."
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
+    return returnStatement(speech)
 
 
 def getFilterAnswerWebhook(req):
@@ -219,13 +211,7 @@ def getFilterAnswerWebhook(req):
     else:
         speech = "Please enter a valid timeframe."
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
+    return returnStatement(speech)
 
 
 def getTimeFilterAnswerWebhook(req):
@@ -240,13 +226,8 @@ def getTimeFilterAnswerWebhook(req):
     else:
         speech = "This timeframe is not valid for " + kpiTimeFilter + " data. Please enter a valid timeframe."
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
+
+    return returnStatement(speech)
 
 
 
@@ -273,13 +254,7 @@ def getKpiFilterAnswer(req):
         speech = "You cannot see " + kpiTimeFilter + \
                  " data with this timeframe. Please select a different type of data."
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
+    return returnStatement(speech)
 
 def getSubjectFilterAnswerWebhook(req):
     result = req.get("result")
@@ -290,7 +265,8 @@ def getSubjectFilterAnswerWebhook(req):
     enterpriseKPI2 = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'non-interest revenue', 'interest revenue',
                      'future value', 'customer lifetime value', 'referral/word of mouth value']
-    enterpriseKPI = ['purchase frequency','period since last purchase', 'product servicing fee', 'churn rate', 'lifetime duration']
+    enterpriseKPI = ['purchase frequency','period since last purchase', 'product servicing fee',
+                     'churn rate', 'lifetime duration']
     productKPI = ['product processing cost', 'purchase frequency', 'non-interest revenue',
                   'product servicing fee', 'churn rate']
     if subject == "enterprise" or subject == "segment":
@@ -304,20 +280,15 @@ def getSubjectFilterAnswerWebhook(req):
     elif subject == "product":
         if kpi in productKPI:
             kpitype = ""
-            speech = "Awesome! I have all the information that I need. " + checkForError(kpi, kpitype, timeframe, subject)
+            speech = "Awesome! I have all the information that I need. " + \
+                     checkForError(kpi, kpitype, timeframe, subject)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     else:
         kpitype = ""
         speech = "Awesome! I have all the information that I need. " + checkForError(kpi, kpitype, timeframe, subject)
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
+    return returnStatement(speech)
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
