@@ -189,7 +189,7 @@ def getWelcomeAnswerWebhook(req):
         speech = "Let's get started! Are you interested in historical or predictive data?"
     else:
         speech = "I'm sorry, I did not understand your statement. " \
-                 "Please enter your question or type 'filter' for more options."
+                 "Please enter your question or type 'options' for a list of options."
 
     return returnStatement(speech)
 
@@ -270,25 +270,12 @@ def getKpiFilterAnswer(req):
 def getSubjectFilterAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
-    timeframe = parameters.get("timeframe")
-    kpi = parameters.get("kpi")
-    kpiTimeFilter = parameters.get("kpi-time-filter")
-    historicalTimeframe = ['past month', 'past week', 'today', 'past year', 'beginning of time']
-    historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
-                     'purchase frequency',
-                     'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
-    predictiveKPI = ['future value', 'customer lifetime value', 'referral/word of mouth value',
-                     'customers with the highest probability to churn',
-                     'customers with the highest probability to upsell/cross-sell',
-                     'customers with the highest referral/word of mouth value',
-                     'customers with the longest predicted lifetime duration',
-                     'churn rate', 'lifetime duration']
-    if (timeframe in historicalTimeframe and kpi in historicalKPI) or (
-                    timeframe not in historicalTimeframe and kpi in predictiveKPI):
+    subject = parameters.get("subject")
+    if subject:
         speech = "Awesome! What type of data are you interested in seeing?"
     else:
-        speech = "You cannot see " + kpiTimeFilter + \
-                 " data with this timeframe. Please select a different type of data."
+        speech = "I'm sorry, I did not understand your statement. " \
+                 "Please reword, or type 'options' for a list of options."
 
     return returnStatement(speech)
 
