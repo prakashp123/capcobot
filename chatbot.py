@@ -16,7 +16,7 @@ from flask import make_response
 # Flask app should start in global layout
 app = Flask(__name__)
 
-
+#required webhook code
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
@@ -32,7 +32,7 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
-
+#checks the request to see if it is valid - outputs nothing if no request action is found
 def processRequest(req):
     if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get(
             "result").get("action") != "welcomeAnswer" \
@@ -58,7 +58,7 @@ def processRequest(req):
 
     return res
 
-
+#calls checkForError to output the result
 def makeWebhookResult(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -71,7 +71,7 @@ def makeWebhookResult(req):
 
     return returnStatement(speech)
 
-
+#main return statement
 def returnStatement(speech):
     return {
         "speech": speech,
@@ -81,7 +81,7 @@ def returnStatement(speech):
         "source": "chatbot"
     }
 
-
+#takes in all significant parameters - this is where the actual results would be outputted
 def checkForError(kpi, kpitype, timeframe, subject):
     historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'purchase frequency',
@@ -161,7 +161,7 @@ def checkForError(kpi, kpitype, timeframe, subject):
 
     return speech
 
-
+#welcoming intent
 def getWelcomeWebhook(req):
     result = req.get("result")
     action = result.get("action")
@@ -172,7 +172,7 @@ def getWelcomeWebhook(req):
 
     return returnStatement(speech)
 
-
+#determines whether you type 'filter' or your query
 def getWelcomeAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -193,7 +193,7 @@ def getWelcomeAnswerWebhook(req):
 
     return returnStatement(speech)
 
-
+#first response after filter - if you typed historical or predictive
 def getFilterAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -213,7 +213,7 @@ def getFilterAnswerWebhook(req):
 
     return returnStatement(speech)
 
-
+#takes the timeframe you want and asks for the subject (customer, segment, etc.)
 def getTimeFilterAnswerWebhook(req):
     historicalTimeframe = ['past month', 'past week', 'today', 'past year', 'beginning of time']
     result = req.get("result")
@@ -230,7 +230,7 @@ def getTimeFilterAnswerWebhook(req):
     return returnStatement(speech)
 
 
-
+#takes the timeframe and subject and kpi information and determines whether to ask for average/sum or call checkforError
 def getKpiFilterAnswer(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -266,7 +266,7 @@ def getKpiFilterAnswer(req):
 
     return returnStatement(speech)
 
-
+#gets the subject and asks for what KPI you would like to see
 def getSubjectFilterAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -279,6 +279,7 @@ def getSubjectFilterAnswerWebhook(req):
 
     return returnStatement(speech)
 
+#more required webhook code
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
