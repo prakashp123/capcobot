@@ -237,17 +237,25 @@ def getTimeFilterAnswerWebhook(req):
     if timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or \
             (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
         speech = "Awesome! What type of data are you interested in seeing?"
-
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "data": {},
+            "contextOut": [],
+            "source": "chatbot"
+        }
     else:
         speech = "This timeframe is not valid for " + kpiTimeFilter + " data. Please enter a valid timeframe."
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "data": {
+                "timeframe": ""
+            },
+            "contextOut": [],
+            "source": "chatbot"
+        }
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
 
 
 def getKpiFilterAnswer(req):
@@ -298,18 +306,18 @@ def getSubjectFilterAnswerWebhook(req):
             speech = "Would you like to see the average or sum value for this data?"
         elif kpi in enterpriseKPI:
             kpitype = ""
-            speech = "Awesome! I have all the information that I need" + checkForError(kpi,kpitype,timeframe,subject)
+            speech = "Awesome! I have all the information that I need. " + checkForError(kpi,kpitype,timeframe,subject)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     elif subject == "product":
         if kpi in productKPI:
             kpitype = ""
-            speech = "Awesome! I have all the information that I need" + checkForError(kpi, kpitype, timeframe, subject)
+            speech = "Awesome! I have all the information that I need. " + checkForError(kpi, kpitype, timeframe, subject)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     else:
         kpitype = ""
-        speech = "Awesome! I have all the information that I need" + checkForError(kpi, kpitype, timeframe, subject)
+        speech = "Awesome! I have all the information that I need. " + checkForError(kpi, kpitype, timeframe, subject)
 
     return {
         "speech": speech,
