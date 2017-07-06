@@ -188,8 +188,7 @@ def getWelcomeAnswerWebhook(req):
     elif filter and not (kpi or kpitype or subject or timeframe):
         speech = "Let's get started! Are you interested in historical or predictive data?"
     else:
-        if filter or not filter:
-            speech = "I'm sorry, I did not understand your statement. " \
+        speech = "I'm sorry, I did not understand your statement. " \
                  "Please enter your question or type 'filter' for more options."
 
     return returnStatement(speech)
