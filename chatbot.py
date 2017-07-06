@@ -237,16 +237,25 @@ def getTimeFilterAnswerWebhook(req):
     if timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or \
             (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
         speech = "Awesome! What type of data are you interested in seeing?"
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "data": {},
+            "contextOut": [],
+            "source": "chatbot"
+        }
     else:
         speech = "This timeframe is not valid for " + kpiTimeFilter + " data. Please enter a valid timeframe."
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "data": {
+                "timeframe": ""
+            },
+            "contextOut": [],
+            "source": "chatbot"
+        }
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "data": {},
-        "contextOut": [],
-        "source": "chatbot"
-    }
 
 
 def getKpiFilterAnswer(req):
@@ -317,12 +326,6 @@ def getSubjectFilterAnswerWebhook(req):
         "contextOut": [],
         "source": "chatbot"
     }
-
-
-
-
-
-
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
