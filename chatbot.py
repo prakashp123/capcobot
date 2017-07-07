@@ -228,9 +228,9 @@ def getTimeFilterAnswerWebhook(req):
     predictiveTimeframe = ['one month', 'three months', 'six months']
     if options:
         if kpiTimeFilter == "historical":
-            speech = "Your options are '" + ("', ".join(str(x) for x in historicalTimeframe))+ "'"
+            speech = "Your options are '" + ("', '".join(str(x) for x in historicalTimeframe))+ "'"
         else:
-            speech = "Your options are '" + ("', ".join(str(x) for x in predictiveTimeframe))+ "'"
+            speech = "Your options are '" + ("', '".join(str(x) for x in predictiveTimeframe))+ "'"
     elif timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or \
             (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
         speech = "Excellent! For which subject would you like to see these results?"
@@ -277,19 +277,19 @@ def getKpiFilterAnswer(req):
     if options:
         if subject == "enterprise" or subject == "segment":
             if kpiTimeFilter == "historical":
-                speech = "Your options are '" + ("', ".join(str(x) for x in seHistoricalKPI))+ "'"
+                speech = "Your options are '" + ("', '".join(str(x) for x in seHistoricalKPI))+ "'"
             else:
-                speech = "Your options are " + (", ".join(str(x) for x in sePredictiveKPI))+ "'"
+                speech = "Your options are " + (", '".join(str(x) for x in sePredictiveKPI))+ "'"
         elif subject == "product":
             if kpiTimeFilter == "historical":
-                speech = "Your options are '" + ("', ".join(str(x) for x in sePredictiveKPI if x != "churn rate"))+ "'"
+                speech = "Your options are '" + ("', '".join(str(x) for x in sePredictiveKPI if x != "churn rate"))+ "'"
             else:
                 speech = "Your only option is 'churn rate'."
         elif subject == "customer":
             if kpiTimeFilter == "historical":
-                speech = "Your options are '" + ("', ".join(str(x) for x in historicalKPI)) + "'"
+                speech = "Your options are '" + ("', '".join(str(x) for x in historicalKPI)) + "'"
             else:
-                speech = "Your options are '" + ("', ".join(str(x) for x in predictiveKPI)) + "'"
+                speech = "Your options are '" + ("', '".join(str(x) for x in predictiveKPI)) + "'"
     elif subject == "enterprise" or subject == "segment":
         if kpi in enterpriseKPI2:
             speech = "Would you like to see the average or sum value for this data?"
