@@ -202,12 +202,15 @@ def getFilterAnswerWebhook(req):
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
     kpiTimeFilter = parameters.get("kpi-time-filter")
+    options = parameters.get("other-options")
     if kpi and timeframe and subject and kpitype:
         speech = "Awesome! I have all the information I need. " + checkForError(kpi, kpitype, timeframe, subject)
     elif kpiTimeFilter == "historical":
         speech = "How far back would you like to see results from?"
     elif kpiTimeFilter == "predictive":
         speech = "How far forward would you like to see results for?"
+    elif options:
+        speech = "Please select between 'historical' and 'predictive'."
     else:
         speech = "Please enter a valid timeframe."
 
