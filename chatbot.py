@@ -240,13 +240,23 @@ def getKpiFilterAnswer(req):
     timeframe = parameters.get("timeframe")
     kpi = parameters.get("kpi")
     subject = parameters.get("subject")
+    options = parameters.get("other-options")
+    #kpi that have average or sum values
     enterpriseKPI2 = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                       'non-interest revenue', 'interest revenue',
                       'future value', 'customer lifetime value', 'referral/word of mouth value']
+    #kpi that do not have average or sum values
     enterpriseKPI = ['purchase frequency', 'period since last purchase', 'product servicing fee',
                      'churn rate', 'lifetime duration']
+    #products can only access these kpi
     productKPI = ['product processing cost', 'purchase frequency', 'non-interest revenue',
                   'product servicing fee', 'churn rate']
+    kpiTimeFilter = parameters.get("kpi-time-filter")
+    seHistoricalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
+                      'non-interest revenue', 'interest revenue','purchase frequency',
+                       'period since last purchase', 'product servicing fee']
+    sePredictiveKPI= ['future value', 'customer lifetime value',
+                      'referral/word of mouth value','churn rate', 'lifetime duration']
     if subject == "enterprise" or subject == "segment":
         if kpi in enterpriseKPI2:
             speech = "Would you like to see the average or sum value for this data?"
@@ -263,6 +273,12 @@ def getKpiFilterAnswer(req):
                      checkForError(kpi, kpitype, timeframe, subject)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
+    elif options:
+        if subject == "enterprise" or subject == "segment":
+            if kpiTimeFilter == "historical":
+                speech = "Your options are " + ", ".join(str(x) for x in seHistoricalKPI)
+            else:
+                speech = "Your options are " + ", ".join(str(x) for x in sePredictiveKPI)
     else:
         kpitype = ""
         speech = "Awesome! I have all the information that I need. " + checkForError(kpi, kpitype, timeframe, subject)
