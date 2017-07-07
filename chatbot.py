@@ -223,7 +223,15 @@ def getTimeFilterAnswerWebhook(req):
     parameters = result.get("parameters")
     timeframe = parameters.get("timeframe")
     kpiTimeFilter = parameters.get("kpi-time-filter")
-    if timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or \
+    options = parameters.get("other-options")
+    historicalTimeframe = ['past month', 'past week', 'today', 'past year', 'beginning of time']
+    predictiveTimeframe = ['one month', 'three months', 'six months']
+    if options:
+        if kpiTimeFilter == "historical":
+            speech = "Your options are " + (", ".join(str(x) for x in historicalTimeframe))
+        else:
+            speech = "Your options are " + (", ".join(str(x) for x in predictiveTimeframe))
+    elif timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or \
             (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
         speech = "Excellent! For which subject would you like to see these results?"
     else:
@@ -257,12 +265,31 @@ def getKpiFilterAnswer(req):
                        'period since last purchase', 'product servicing fee']
     sePredictiveKPI= ['future value', 'customer lifetime value',
                       'referral/word of mouth value','churn rate', 'lifetime duration']
+    historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
+                     'purchase frequency',
+                     'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
+    predictiveKPI = ['future value', 'customer lifetime value', 'referral/word of mouth value',
+                     'customers with the highest probability to churn',
+                     'customers with the highest probability to upsell/cross-sell',
+                     'customers with the highest referral/word of mouth value',
+                     'customers with the longest predicted lifetime duration',
+                     'churn rate', 'lifetime duration']
     if options:
         if subject == "enterprise" or subject == "segment":
             if kpiTimeFilter == "historical":
-                speech = "Your options are " + ", ".join(str(x) for x in seHistoricalKPI)
+                speech = "Your options are " + (", ".join(str(x) for x in seHistoricalKPI))
             else:
-                speech = "Your options are " + ", ".join(str(x) for x in sePredictiveKPI)
+                speech = "Your options are " + (", ".join(str(x) for x in sePredictiveKPI))
+        elif subject == "product":
+            if kpiTimeFilter == "historical":
+                speech = "Your options are " + (", ".join(str(x) for x in sePredictiveKPI if x != "churn rate"))
+            else:
+                speech = "Your only option is 'churn rate'."
+        elif subject == "customer":
+            if kpiTimeFilter == "historical":
+                speech = "Your options are " + (", ".join(str(x) for x in historicalKPI))
+            else:
+                speech = "Your options are " + (", ".join(str(x) for x in predictiveKPI))
     elif subject == "enterprise" or subject == "segment":
         if kpi in enterpriseKPI2:
             speech = "Would you like to see the average or sum value for this data?"
@@ -290,7 +317,10 @@ def getSubjectFilterAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
     subject = parameters.get("subject")
-    if subject:
+    options = parameters.get("other-options")
+    if options:
+        speech = "Your options are 'customer', 'segment', 'enterprise', 'product. "
+    elif subject:
         speech = "Awesome! What type of data are you interested in seeing?"
     else:
         speech = "I'm sorry, I did not understand your statement. " \
