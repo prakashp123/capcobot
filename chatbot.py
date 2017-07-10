@@ -80,7 +80,12 @@ def processPassword(req):
     result = req.get("result")
     parameters = result.get("parameters")
     password = parameters.get("password")
-    with open('https://github.com/prakashp123/capcobot/tree/master/Data/passwords.csv', 'rb') as csvfile:
+    if password == '123':
+        speech = "Hi"
+
+    return returnStatement(speech)
+
+    '''with open('master/Data/passwords.csv', 'rb') as csvfile:
         my_content = csv.reader(csvfile, delimiter=',')
         for row in my_content:
             if password in row:
@@ -88,7 +93,7 @@ def processPassword(req):
             else:
                 speech = "Incorrect password."
 
-    return returnStatement(speech)
+    return returnStatement(speech)'''
 
 
 #calls checkForError to output the result
