@@ -9,7 +9,7 @@ install_aliases()
 import json
 import os
 import csv
-
+import pandas as pd
 from flask import Flask
 from flask import request
 from flask import make_response
@@ -80,20 +80,14 @@ def processPassword(req):
     result = req.get("result")
     parameters = result.get("parameters")
     password = parameters.get("password")
-    if password == '123':
-        speech = "Hi"
+    passwords = pd.read_csv('../Data/passwords.csv')
+    for row in passwords:
+        if password in row:
+            speech = "You have been granted access."
+        else:
+            speech = "Incorrect password."
 
     return returnStatement(speech)
-
-    '''with open('master/Data/passwords.csv', 'rb') as csvfile:
-        my_content = csv.reader(csvfile, delimiter=',')
-        for row in my_content:
-            if password in row:
-                speech = "You have been granted access."
-            else:
-                speech = "Incorrect password."
-
-    return returnStatement(speech)'''
 
 
 #calls checkForError to output the result
