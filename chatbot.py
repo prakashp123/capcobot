@@ -35,10 +35,10 @@ def webhook():
 
 #checks the request to see if it is valid - outputs nothing if no request action is found
 def processRequest(req):
-    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" and req.get(
-            "result").get("action") != "welcomeAnswer" \
-            and req.get("result").get("action") != "getFilterAnswer" and req.get("result").get(
-        "action") != "getTimeFilterAnswer" \
+    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" \
+            and req.get("result").get("action") != "welcomeAnswer" \
+            and req.get("result").get("action") != "getFilterAnswer" \
+            and req.get("result").get("action") != "getTimeFilterAnswer" \
             and req.get("result").get("action") != "getKpiFilterAnswer" \
             and req.get("result").get("action") != "getSubjectFilterAnswer" \
             and req.get("result").get("action") != "getPassword":
