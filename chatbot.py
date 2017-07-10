@@ -8,6 +8,7 @@ install_aliases()
 
 import json
 import os
+import csv
 
 from flask import Flask
 from flask import request
@@ -57,6 +58,31 @@ def processRequest(req):
         res = getWelcomeWebhook(req)
 
     return res
+
+def getWelcomeWebhook(req):
+    result = req.get("result")
+    action = result.get("action")
+    if action == "passwordWelcome":
+        speech = "Hi! This is the CapcoBot. Please enter your password."
+    else:
+        speech = "Sorry, I couldn't understand your sentence."
+
+    return returnStatement(speech)
+
+def processPassword(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    password = parameters.get("passsword")
+    with open('passwords.csv', 'rb') as csvfile:
+        my_content = csv.reader(csvfile, delimiter=',')
+        for row in my_content:
+            if password in row:
+                speech = "You have been granted access."
+            else:
+                speech = "Incorrect password."
+
+    return returnStatement(speech)
+
 
 #calls checkForError to output the result
 def makeWebhookResult(req):
