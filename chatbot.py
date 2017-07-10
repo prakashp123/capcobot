@@ -41,9 +41,10 @@ def processRequest(req):
             and req.get("result").get("action") != "getTimeFilterAnswer" \
             and req.get("result").get("action") != "getKpiFilterAnswer" \
             and req.get("result").get("action") != "getSubjectFilterAnswer" \
-            and req.get("result").get("action") != "getPassword":
+            and req.get("result").get("action") != "getPassword" \
+            and req.get("result").get("action") != "passwordWelcome":
         return {}
-    
+
     if req.get("result").get("action") == "list":
         res = makeWebhookResult(req)
     elif req.get("result").get("action") == "passwordWelcome":
