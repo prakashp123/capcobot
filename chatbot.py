@@ -13,7 +13,7 @@ import csv
 from flask import Flask
 from flask import request
 from flask import make_response
-
+from Data import *
 # Flask app should start in global layout
 app = Flask(__name__)
 
@@ -77,7 +77,7 @@ def processPassword(req):
     result = req.get("result")
     parameters = result.get("parameters")
     password = parameters.get("password")
-    with open('passwords.csv', 'rb') as csvfile:
+    with open('Data/passwords.csv', 'rb') as csvfile:
         my_content = csv.reader(csvfile, delimiter=',')
         for row in my_content:
             if password in row:
