@@ -76,7 +76,7 @@ def getPasswordWebhook(req):
 def processPassword(req):
     result = req.get("result")
     parameters = result.get("parameters")
-    password = parameters.get("passsword")
+    password = parameters.get("password")
     with open('passwords.csv', 'rb') as csvfile:
         my_content = csv.reader(csvfile, delimiter=',')
         for row in my_content:
