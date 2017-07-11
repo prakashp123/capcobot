@@ -64,6 +64,11 @@ def processRequest(req):
 
     return res
 
+    '''elif req.get("result").get("action") == "passwordWelcome":
+        res = getPasswordWebhook(req)
+    elif req.get("result").get("action") == "getPassword":
+        res = processPassword(req)'''
+
 
 #main return statement
 def returnStatement(speech):
@@ -77,7 +82,7 @@ def returnStatement(speech):
 
 
 #main welcome text - asks for password
-def getPasswordWebhook(req):
+'''def getPasswordWebhook(req):
     result = req.get("result")
     action = result.get("action")
     if action == "passwordWelcome":
@@ -102,7 +107,7 @@ def processPassword(req):
 
     return returnStatement(speech)
 
-
+'''
 
 # WORKING CHATBOT CODE IS BELOW
 
