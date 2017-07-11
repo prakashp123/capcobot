@@ -95,7 +95,7 @@ def processPassword(req):
     result = req.get("result")
     parameters = result.get("parameters")
     password = parameters.get("password")
-    passwords = pd.read_csv('../Data/passwords.csv')
+    passwords = pd.read_csv('Data/passwords.csv')
     for row in passwords:
         if password in row:
             speech = "You have been granted access."
