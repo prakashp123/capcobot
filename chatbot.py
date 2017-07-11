@@ -51,7 +51,7 @@ def processRequest(req):
         res = getPasswordWebhook(req)
     elif req.get("result").get("action") == "getPassword":
         res = processPassword(req)
-    elif req.get("result").get("action") == "welcomeAnswer":
+    elif req.get("result").get("action") == "getWelcome":
         res = getWelcomeAnswerWebhook(req)
     elif req.get("result").get("action") == "getFilterAnswer":
         res = getFilterAnswerWebhook(req)
