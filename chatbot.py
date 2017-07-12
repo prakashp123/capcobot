@@ -49,6 +49,10 @@ def processRequest(req):
 
     if req.get("result").get("action") == "list":
         res = makeWebhookResult(req)
+    elif req.get("result").get("action") == "passwordWelcome":
+        res = getPasswordWebhook(req)
+    elif req.get("result").get("action") == "getPassword":
+        res = processPassword(req)
     elif req.get("result").get("action") == "getWelcome":
         res = getWelcomeWebhook(req)
     elif req.get("result").get("action") == "welcomeAnswer":
@@ -68,10 +72,7 @@ def processRequest(req):
 
     return res
 
-    '''elif req.get("result").get("action") == "passwordWelcome":
-        res = getPasswordWebhook(req)
-    elif req.get("result").get("action") == "getPassword":
-        res = processPassword(req)'''
+    ''''''
 
 
 #main return statement
