@@ -159,6 +159,17 @@ def getWelcomeAnswerWebhook(req):
     return returnStatement(speech)
 
 
+def filterAbout(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    about = parameters.get("about")
+    if about:
+        speech = "'Historical' refers to information regarding the past, up until today. 'Predictive' " \
+                 "refers to the future, where we predict future results based on the information we have now."
+
+    return returnStatement(speech)
+
+
 #first response after filter - if you typed historical or predictive
 def getFilterAnswerWebhook(req):
     result = req.get("result")
