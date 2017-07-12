@@ -8,8 +8,7 @@ install_aliases()
 
 import json
 import os
-import csv
-import pandas as pd
+
 from flask import Flask
 from flask import request
 from flask import make_response
@@ -43,7 +42,9 @@ def processRequest(req):
             and req.get("result").get("action") != "getSubjectFilterAnswer" \
             and req.get("result").get("action") != "getPassword" \
             and req.get("result").get("action") != "passwordWelcome":
-        return {}
+        speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
+                 "type 'about' for more information."
+        return returnStatement(speech)
 
     if req.get("result").get("action") == "list":
         res = makeWebhookResult(req)
@@ -82,7 +83,7 @@ def returnStatement(speech):
 
 
 #main welcome text - asks for password
-'''def getPasswordWebhook(req):
+def getPasswordWebhook(req):
     result = req.get("result")
     action = result.get("action")
     if action == "passwordWelcome":
@@ -98,16 +99,13 @@ def processPassword(req):
     result = req.get("result")
     parameters = result.get("parameters")
     password = parameters.get("password")
-    passwords = pd.read_csv('Data/passwords.csv')
-    for row in passwords:
-        if password in row:
-            speech = "You have been granted access."
-        else:
-            speech = "Incorrect password."
-
+    if password == "pass123":
+        speech = "You have been granted access."
+    else:
+        speech = "This is an invalid password."
     return returnStatement(speech)
 
-'''
+
 
 # WORKING CHATBOT CODE IS BELOW
 
@@ -123,6 +121,15 @@ def getWelcomeWebhook(req):
         speech = "Hi! This is the CapcoBot. Please enter your question, or type 'filter' for more options."
     else:
         speech = "Sorry, I couldn't understand your sentence."
+
+    return returnStatement(speech)
+
+def welcomeAbout(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    about = parameters.get("about")
+    if about:
+        speech = "The Capcobot is a premium bot designed to give results rearding different characteristics about customers. To learn more about what type of data can be seen, type 'filter'."
 
     return returnStatement(speech)
 
@@ -379,8 +386,6 @@ def checkForError(kpi, kpitype, timeframe, subject):
     print(speech)
 
     return speech
-
-
 
 
 
