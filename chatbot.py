@@ -39,6 +39,7 @@ def processRequest(req):
             and req.get("result").get("action") != "getFilterAnswer" \
             and req.get("result").get("action") != "getTimeFilterAnswer" \
             and req.get("result").get("action") != "getKpiFilterAnswer" \
+            and req.get("result").get("action") != "welcomeAbout" \
             and req.get("result").get("action") != "getSubjectFilterAnswer" \
             and req.get("result").get("action") != "getPassword" \
             and req.get("result").get("action") != "passwordWelcome":
@@ -131,7 +132,8 @@ def welcomeAbout(req):
     parameters = result.get("parameters")
     about = parameters.get("about")
     if about:
-        speech = "The Capcobot is a premium bot designed to give results rearding different characteristics about customers. To learn more about what type of data can be seen, type 'filter'."
+        speech = "The Capcobot is a premium bot designed to give results rearding different " \
+                 "characteristics about customers. To learn more about what type of data can be seen, type 'filter'."
 
     return returnStatement(speech)
 
