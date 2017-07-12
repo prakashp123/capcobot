@@ -101,7 +101,7 @@ def processPassword(req):
     result = req.get("result")
     parameters = result.get("parameters")
     password = parameters.get("password")
-    if password == "pass123":
+    if password == "123":
         return getWelcomeWebhook(req)
 
     else:
