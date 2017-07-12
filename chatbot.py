@@ -52,6 +52,8 @@ def processRequest(req):
         res = getWelcomeWebhook(req)
     elif req.get("result").get("action") == "welcomeAnswer":
         res = getWelcomeAnswerWebhook(req)
+    elif req.get("result").get("action") == "welcomeAbout":
+        res = welcomeAbout(req)
     elif req.get("result").get("action") == "getFilterAnswer":
         res = getFilterAnswerWebhook(req)
     elif req.get("result").get("action") == "getTimeFilterAnswer":
