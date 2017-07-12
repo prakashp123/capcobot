@@ -53,8 +53,6 @@ def processRequest(req):
         res = getPasswordWebhook(req)
     elif req.get("result").get("action") == "getPassword":
         res = processPassword(req)
-    elif req.get("result").get("action") == "getWelcome":
-        res = getWelcomeWebhook(req)
     elif req.get("result").get("action") == "welcomeAnswer":
         res = getWelcomeAnswerWebhook(req)
     elif req.get("result").get("action") == "welcomeAbout":
@@ -104,7 +102,6 @@ def processPassword(req):
     parameters = result.get("parameters")
     password = parameters.get("password")
     if password == "pass123":
-        speech = "You have been granted access."
         return getWelcomeWebhook(req)
 
     else:
@@ -123,8 +120,8 @@ def processPassword(req):
 def getWelcomeWebhook(req):
     result = req.get("result")
     action = result.get("action")
-    if action == "getWelcome":
-        speech = "Hi! This is the CapcoBot. Please enter your question, or type 'filter' for more options."
+    if action == "getPassword":
+        speech = "You have been granted access to the CapcoBot. Please enter your question, or type 'filter' for more options."
     else:
         speech = "Sorry, I couldn't understand your sentence."
 
