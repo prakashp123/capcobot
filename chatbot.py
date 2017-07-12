@@ -105,9 +105,11 @@ def processPassword(req):
     password = parameters.get("password")
     if password == "pass123":
         speech = "You have been granted access."
+        return getWelcomeWebhook(req)
+
     else:
         speech = "This is an invalid password."
-    return returnStatement(speech)
+        return returnStatement(speech)
 
 
 
