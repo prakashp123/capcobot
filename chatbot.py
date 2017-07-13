@@ -45,6 +45,9 @@ def processRequest(req):
             and req.get("result").get("action") != "getPassword" \
             and req.get("result").get("action") != "getHelp" \
             and req.get("result").get("action") != "getValue" \
+            and req.get("result").get("action") != "getKPI" \
+            and req.get("result").get("action") != "getSubject" \
+            and req.get("result").get("action") != "getTimeframe" \
             and req.get("result").get("action") != "getFaultyInput" \
             and req.get("result").get("action") != "passwordWelcome") or not action:
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
@@ -61,6 +64,12 @@ def processRequest(req):
         res = getHelp(req)
     elif req.get("result").get("action") == "getValue":
         res = getValue(req)
+    elif req.get("result").get("action") == "getKPI":
+        res = getKPI(req)
+    elif req.get("result").get("action") == "getSubject":
+        res = getSubject(req)
+    elif req.get("result").get("action") == "getTimeframe":
+        res = getTimeframe(req)
     elif req.get("result").get("action") == "welcomeAnswer":
         res = getWelcomeAnswerWebhook(req)
     elif req.get("result").get("action") == "welcomeAbout":
@@ -436,6 +445,18 @@ def getFaultyInput(req):
 def getValue(req):
     speech = "You said the word 'value'. What kind of value? Type 'cv' for current value, 'fv' for future value, " \
              "'rwmv' for referral/word of mouth value, or 'clv' for customer liftetime value"
+    return returnStatement(speech)
+
+def getSubject(req):
+    speech = "I just need one last piece of information. What subject would you like to see this information for?"
+    return returnStatement(speech)
+
+def getKPI(req):
+    speech = "I just need one last piece of information. What KPI would you like to see this information for?"
+    return returnStatement(speech)
+
+def getTimeframe(req):
+    speech = "I just need one last piece of information. What timeframe would you like to see this information for?"
     return returnStatement(speech)
 
 #more required webhook code
