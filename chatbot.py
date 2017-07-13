@@ -379,9 +379,9 @@ def checkForError(kpi, kpitype, timeframe, subject):
                                                                                 kpi != "product servicing frequency")) \
             and not kpitype:
         speech = "Would you like to know the average results or the sum results?"
-    elif (kpi and subject) or (kpi and subject and kpitype) :
+    elif not timeframe and (kpi and subject) or (kpi and subject and kpitype) :
         speech = "For what time period would you like to see these results?"
-    elif (kpi and timeframe) or (kpi and kpitype and timeframe) or (kpi and kpitype) :
+    elif not subject and (kpi and timeframe) or (kpi and kpitype and timeframe) or (kpi and kpitype) :
         speech = "Just a little more information. Which group are you interested in?"
     elif (subject == "enterprise" or subject == "segment") and pt and (
             (kpi != 'customers with the highest probability to churn' or
