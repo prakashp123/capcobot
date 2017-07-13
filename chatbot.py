@@ -324,10 +324,14 @@ def makeWebhookResult(req):
     timeframe = parameters.get("timeframe")
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
-
-    speech = checkForError(kpi, kpitype, timeframe, subject)
-
-    return returnStatement(speech)
+    typos = parameters.get("typos")
+    if typos:
+        speech = "You said the word 'value'. What kind of value? Type 'cv' for current value, 'fv' for future value, " \
+             "'rwmv' for referral/word of mouth value, or 'clv' for customer liftetime value"
+        return returnStatement(speech)
+    else:
+        speech = checkForError(kpi, kpitype, timeframe, subject)
+        return returnStatement(speech)
 
 # this the main output function
 # takes in all significant parameters - this is where the actual results would be outputted
