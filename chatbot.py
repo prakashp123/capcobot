@@ -345,16 +345,18 @@ def checkForError(kpi, kpitype, timeframe, subject):
     bkpi = False
     ht = False
     pt = False
-    if kpi in historicalKPI:
-        hkpi = True
-    elif kpi in predictiveKPI:
-        pkpi = True
-    else:
-        bkpi = True
-    if timeframe in historicalTimeframe:
-        ht = True
-    else:
-        pt = True
+    if kpi:
+        if kpi in historicalKPI:
+            hkpi = True
+        elif kpi in predictiveKPI:
+            pkpi = True
+        else:
+            bkpi = True
+    if timeframe:
+        if timeframe in historicalTimeframe:
+            ht = True
+        else:
+            pt = True
     if not (kpi or kpitype or timeframe or subject):
         speech = "I didn't quite understand that. Are you interested in customers, segments, enterprises, or products?"
     elif (subject == "customer" or subject == "product") and kpitype:
