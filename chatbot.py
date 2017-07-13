@@ -43,6 +43,7 @@ def processRequest(req):
             and req.get("result").get("action") != "getSubjectFilterAnswer" \
             and req.get("result").get("action") != "getPassword" \
             and req.get("result").get("action") != "getHelp" \
+            and req.get("result").get("action") != "getValue" \
             and req.get("result").get("action") != "getFaultyInput" \
             and req.get("result").get("action") != "passwordWelcome":
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
@@ -56,7 +57,9 @@ def processRequest(req):
     elif req.get("result").get("action") == "getPassword":
         res = processPassword(req)
     elif req.get("result").get("action") == "getHelp":
-        res = processPassword(req)
+        res = getHelp(req)
+    elif req.get("result").get("action") == "getValue":
+        res = getValue(req)
     elif req.get("result").get("action") == "welcomeAnswer":
         res = getWelcomeAnswerWebhook(req)
     elif req.get("result").get("action") == "welcomeAbout":
@@ -70,7 +73,7 @@ def processRequest(req):
     elif req.get("result").get("action") == "getSubjectFilterAnswer":
         res = getSubjectFilterAnswerWebhook(req)
     else:
-        res = getFaultyiInput(req)
+        res = getFaultyInput(req)
 
     return res
 
@@ -414,8 +417,13 @@ def getHelp(req):
 
     return returnStatement(speech)
 
-def getFaultyiInput(req):
-    speech = "I didn't understand what you said. Check your spelling and try again." \
+def getFaultyInput(req):
+    speech = "I didn't understand what you said. Check your spelling and try again."
+    return returnStatement(speech)
+
+def getValue(req):
+    speech = "You said the word 'value'. What kind of value? Type 'cv' for current value, 'fv' for future value, " \
+             "'rwmv' for referral/word of mouth value, or 'clv' for customer liftetime value"
     return returnStatement(speech)
 
 #more required webhook code
