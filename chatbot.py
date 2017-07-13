@@ -402,7 +402,14 @@ def checkForError(kpi, kpitype, timeframe, subject):
 
     return speech
 
+def getHelp(req):
+    result = req.get('result')
+    parameters = result.get('parameters')
+    help = parameters.get('help')
+    if help:
+        speech = "Type in your question in English, or type 'filter' for a more directed approach."
 
+    return returnStatement(speech)
 
 #more required webhook code
 if __name__ == '__main__':
