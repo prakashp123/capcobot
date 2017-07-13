@@ -231,7 +231,8 @@ def getSubjectFilterAnswerWebhook(req):
     parameters = result.get("parameters")
     subject = parameters.get("subject")
     options = parameters.get("other-options")
-    if options:
+    timeframe = parameters.get("timeframe")
+    if options and timeframe:
         speech = "Your options are 'customer', 'segment', 'enterprise', 'product. "
     elif subject:
         speech = "Awesome! What type of data are you interested in seeing?"
