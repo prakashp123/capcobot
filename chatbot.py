@@ -34,7 +34,8 @@ def webhook():
 
 #checks the request to see if it is valid - outputs nothing if no request action is found
 def processRequest(req):
-    if req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" \
+    action = req.get("result").get("action")
+    if (req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" \
             and req.get("result").get("action") != "welcomeAnswer" \
             and req.get("result").get("action") != "getFilterAnswer" \
             and req.get("result").get("action") != "getTimeFilterAnswer" \
@@ -45,7 +46,7 @@ def processRequest(req):
             and req.get("result").get("action") != "getHelp" \
             and req.get("result").get("action") != "getValue" \
             and req.get("result").get("action") != "getFaultyInput" \
-            and req.get("result").get("action") != "passwordWelcome":
+            and req.get("result").get("action") != "passwordWelcome") or not action:
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
         return returnStatement(speech)
