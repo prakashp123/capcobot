@@ -43,6 +43,7 @@ def processRequest(req):
             and req.get("result").get("action") != "getSubjectFilterAnswer" \
             and req.get("result").get("action") != "getPassword" \
             and req.get("result").get("action") != "getHelp" \
+            and req.get("result").get("action") != "getFaultyInput" \
             and req.get("result").get("action") != "passwordWelcome":
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
@@ -69,11 +70,10 @@ def processRequest(req):
     elif req.get("result").get("action") == "getSubjectFilterAnswer":
         res = getSubjectFilterAnswerWebhook(req)
     else:
-        res = getWelcomeWebhook(req)
+        res = getFaultyiInput(req)
 
     return res
 
-    ''''''
 
 
 #main return statement
