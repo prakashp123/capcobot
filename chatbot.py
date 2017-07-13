@@ -414,6 +414,10 @@ def getHelp(req):
 
     return returnStatement(speech)
 
+def getFaultyiInput(req):
+    speech = "I didn't understand what you said. Check your spelling and try again." \
+    return returnStatement(speech)
+
 #more required webhook code
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
