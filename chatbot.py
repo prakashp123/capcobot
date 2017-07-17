@@ -242,7 +242,7 @@ def getSubjectFilterAnswerWebhook(req):
     subject = parameters.get("subject")
     options = parameters.get("other-options")
     timeframe = parameters.get("timeframe")
-    if options and timeframe:
+    if options:
         speech = "Your options are 'customer', 'segment', 'enterprise', 'product. "
     elif subject:
         speech = "Awesome! What type of data are you interested in seeing?"
@@ -434,7 +434,7 @@ def getHelp(req):
     parameters = result.get('parameters')
     help = parameters.get('help')
     if help:
-        speech = "Type in your question in English, or type 'filter' for a more directed approach."
+        speech = "Type in your question in English, or type 'wizard' for a more directed approach."
 
     return returnStatement(speech)
 
