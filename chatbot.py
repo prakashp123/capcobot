@@ -49,7 +49,7 @@ def processRequest(req):
             and req.get("result").get("action") != "getSubject" \
             and req.get("result").get("action") != "getTimeframe" \
             and req.get("result").get("action") != "getFaultyInput" \
-            and req.get("result").get("action") != "passwordWelcome") or not action:
+            and req.get("result").get("action") != "passwordWelcome") or action == "":
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
         return returnStatement(speech)
@@ -242,7 +242,7 @@ def getSubjectFilterAnswerWebhook(req):
     subject = parameters.get("subject")
     options = parameters.get("other-options")
     timeframe = parameters.get("timeframe")
-    if options:
+    if options and timeframe:
         speech = "Your options are 'customer', 'segment', 'enterprise', 'product. "
     elif subject:
         speech = "Awesome! What type of data are you interested in seeing?"
