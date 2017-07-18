@@ -380,7 +380,7 @@ def checkForError(kpi, kpitype, timeframe, subject):
     if not subject:
         speech = "You did not mention a subject. What subject would you like to see this data for?"
     elif not kpi:
-        speech = "You did not mention a subject. What subject would you like to see this data for?"
+        speech = "You did not mention a KPI. What KPI would you like to see data for?"
     elif not timeframe:
         speech = "You did not mention a subject. What subject would you like to see this data for?"
     elif not (kpi or kpitype or timeframe or subject):
