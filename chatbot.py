@@ -16,6 +16,7 @@ from flask import make_response
 # Flask app should start in global layout
 app = Flask(__name__)
 
+
 #required webhook code
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -376,7 +377,13 @@ def checkForError(kpi, kpitype, timeframe, subject):
             ht = True
         else:
             pt = True
-    if not (kpi or kpitype or timeframe or subject):
+    if not subject:
+        speech = "You did not mention a subject. What subject would you like to see this data for?"
+    elif not kpi:
+        speech = "You did not mention a subject. What subject would you like to see this data for?"
+    elif not timeframe:
+        speech = "You did not mention a subject. What subject would you like to see this data for?"
+    elif not (kpi or kpitype or timeframe or subject):
         speech = "I didn't quite understand that. Are you interested in customers, segments, enterprises, or products?"
     elif (subject == "customer" or subject == "product") and kpitype:
         speech = "This is an invalid statement. You cannot see the " + kpitype + " " + kpi + " for a " + subject
