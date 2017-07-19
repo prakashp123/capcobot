@@ -142,7 +142,7 @@ def getWelcomeWebhook(req):
     result = req.get("result")
     action = result.get("action")
     if action == "getPassword":
-        speech = "You have been granted access to the CapcoBot. Please enter your question, or type 'wizard' for more options."
+        speech = "Welcome to the CapcoBot. Type in your question in English, or type 'wizard' for more options."
     else:
         speech = "Sorry, I couldn't understand your sentence."
 
@@ -170,9 +170,10 @@ def getWelcomeAnswerWebhook(req):
     if (filter and kpi and kpitype and subject and timeframe) or \
             (kpi and kpitype and subject and timeframe) or \
             (kpi and timeframe and (subject == "customer" or subject == "product")):
-        speech = "Awesome! I have all the information I need. " + checkForError(kpi, kpitype, timeframe, subject)
+        speech = "Okay, here we go: " + checkForError(kpi, kpitype, timeframe, subject)
     elif filter and not (kpi or kpitype or subject or timeframe):
-        speech = "Let's get started! Are you interested in historical or predictive data?"
+        speech = "I will guide you through the process to get the answers to your questions.\n" \
+                 " Are you interested in historical or predictive data?"
     else:
         speech = "I'm sorry, I did not understand your statement. " \
                  "Please enter your question or type 'options' for a list of options."
