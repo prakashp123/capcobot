@@ -35,7 +35,7 @@ def webhook():
 
 #checks the request to see if it is valid - outputs nothing if no request action is found
 def processRequest(req):
-    action = req.get("result").get("metadat")
+    action = req.get("result").get("metadata")
     if action == {}:
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
