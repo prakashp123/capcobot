@@ -142,7 +142,7 @@ def getWelcomeWebhook(req):
     result = req.get("result")
     action = result.get("action")
     if action == "getPassword":
-        speech = "You have been granted access to the CapcoBot. Please enter your question, or type 'filter' for more options."
+        speech = "You have been granted access to the CapcoBot. Please enter your question, or type 'wizard' for more options."
     else:
         speech = "Sorry, I couldn't understand your sentence."
 
@@ -154,7 +154,7 @@ def welcomeAbout(req):
     about = parameters.get("about")
     if about:
         speech = "The Capcobot is a premium bot designed to give results rearding different " \
-                 "characteristics about customers. To learn more about what type of data can be seen, type 'filter'."
+                 "characteristics about customers. To learn more about what type of data can be seen, type 'wizard'."
 
     return returnStatement(speech)
 
