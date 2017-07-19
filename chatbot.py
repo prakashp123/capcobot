@@ -167,13 +167,20 @@ def getWelcomeAnswerWebhook(req):
     timeframe = parameters.get("timeframe")
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
+    customerID = parameters.get("customerID")
+    segmentName = parameters.get("segmentName")
+    productName = parameters.get("productName")
+    yesno = parameters.get("yesno")
     if (filter and kpi and kpitype and subject and timeframe) or \
             (kpi and kpitype and subject and timeframe) or \
             (kpi and timeframe and (subject == "customer" or subject == "product")):
-        speech = "Okay, here we go: " + checkForError(kpi, kpitype, timeframe, subject)
+        speech = "Okay, here we go: "\
+                 + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
     elif filter and not (kpi or kpitype or subject or timeframe):
         speech = "I will guide you through the process to get the answers to your questions.\n" \
                  " Are you interested in historical or predictive data?"
+    elif yesno:
+        speech = "Are you interested in historical or predictive data?"
     else:
         speech = "I'm sorry, I did not understand your statement. " \
                  "Please enter your question or type 'options' for a list of options."
@@ -202,8 +209,12 @@ def getFilterAnswerWebhook(req):
     kpitype = parameters.get("kpi-type")
     kpiTimeFilter = parameters.get("kpi-time-filter")
     options = parameters.get("other-options")
+    customerID = parameters.get("customerID")
+    segmentName = parameters.get("segmentName")
+    productName = parameters.get("productName")
     if kpi and timeframe and subject and kpitype:
-        speech = "I have all the information I need.\n " + checkForError(kpi, kpitype, timeframe, subject)
+        speech = "I have all the information I need.\n " \
+                 + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
     elif kpiTimeFilter == "historical":
         speech = "How far back would you like to see results from?" \
                  " If you do not know, type 'options' for a list of options"
@@ -233,7 +244,7 @@ def getTimeFilterAnswerWebhook(req):
             speech = "Your options are '\n''" + ("' \n'".join(str(x) for x in predictiveTimeframe))+ "'"
     elif timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or \
             (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
-        speech = "Okay. For which subject would you like to see these results?" \
+        speech = "Okay. Would you like to see results on a customer, segment enterprise or product level?" \
                  " If you do not know, type 'options for a list of options"
     else:
         speech = "This timeframe is not valid for " + kpiTimeFilter + " data. Please enter a valid timeframe."
@@ -252,8 +263,58 @@ def getSubjectFilterAnswerWebhook(req):
     timeframe = parameters.get("timeframe")
     if options and timeframe:
         speech = "Your options are 'customer'\n 'segment'\n 'enterprise'\n 'product. "
-    elif subject:
-        speech = "Okay. What type of data are you interested in seeing? " \
+    elif subject == "customer":
+        speech = "Okay. What is the customer ID? "
+    elif subject == "segment":
+        speech = "Okay. What is the segment name?"
+    elif subject == "enterprise":
+        speech = "Okay. What KPI are you interested in seeing?" \ 
+                "If you do not know, type 'options for more options"
+    elif subject == "product":
+        speech = "Okay. What is the product name?"
+    else:
+        speech = "I'm sorry, I did not understand your statement. " \
+                 "Please reword, or type 'options' for a list of options."
+
+    return returnStatement(speech)
+
+
+def getCustomerID(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    subject = parameters.get("subject")
+    customerID = parameters.get("customerID")
+    if subject == "customer" and customerID.length() == 7 and customerID.substring(0,2) == "ID" \
+        and customerID.substring(2,customerID.length()).isnumeric():
+        speech = "Okay. What KPI are you interested in seeing? " \
+                 "If you do not know, type 'options for a list of options"
+    else:
+        speech = "I'm sorry, I did not understand your statement. " \
+                 "Please reword, or type 'options' for a list of options."
+
+    return returnStatement(speech)
+
+def getSegmentName(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    subject = parameters.get("subject")
+    segmentName = parameters.get("segmentName")
+    if subject == "segment" and segmentName:
+        speech = "Okay. What KPI are you interested in seeing? " \
+                 "If you do not know, type 'options for a list of options"
+    else:
+        speech = "I'm sorry, I did not understand your statement. " \
+                 "Please reword, or type 'options' for a list of options."
+
+    return returnStatement(speech)
+
+def getProductName(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    subject = parameters.get("subject")
+    productName = parameters.get("productName")
+    if subject == "product" and productName:
+        speech = "Okay. What KPI are you interested in seeing? " \
                  "If you do not know, type 'options for a list of options"
     else:
         speech = "I'm sorry, I did not understand your statement. " \
@@ -270,6 +331,9 @@ def getKpiFilterAnswer(req):
     kpi = parameters.get("kpi")
     subject = parameters.get("subject")
     options = parameters.get("other-options")
+    customerID = parameters.get("customerID")
+    segmentName = parameters.get("segmentName")
+    productName = parameters.get("productName")
     #kpi that have average or sum values
     enterpriseKPI2 = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                       'non-interest revenue', 'interest revenue',
@@ -316,20 +380,20 @@ def getKpiFilterAnswer(req):
             speech = "Would you like to see the average or sum value for this data?"
         elif kpi in enterpriseKPI:
             kpitype = ""
-            speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe,
-                                                                                         subject)
+            speech = "Okay, here you go:\n " \
+                     + checkForError(kpi, kpitype, timeframe,subject, customerID, segmentName, productName)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     elif subject == "product":
         if kpi in productKPI:
             kpitype = ""
             speech = "Okay, here you go:\n "  + \
-                     checkForError(kpi, kpitype, timeframe, subject)
+                     checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     else:
         kpitype = ""
-        speech = "Okay, here you go:\n "  + checkForError(kpi, kpitype, timeframe, subject)
+        speech = "Okay, here you go:\n "  + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
 
     return returnStatement(speech)
 
@@ -343,17 +407,20 @@ def makeWebhookResult(req):
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
     typos = parameters.get("typos")
+    customerID = parameters.get("customerID")
+    segmentName = parameters.get("segmentName")
+    productName = parameters.get("productName")
     if typos:
         speech = "You said the word 'value'. What kind of value? Type 'cv' for current value, 'fv' for future value, " \
              "'rwmv' for referral/word of mouth value, or 'clv' for customer liftetime value"
         return returnStatement(speech)
     else:
-        speech = checkForError(kpi, kpitype, timeframe, subject)
+        speech = checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
         return returnStatement(speech)
 
 # this the main output function
 # takes in all significant parameters - this is where the actual results would be outputted
-def checkForError(kpi, kpitype, timeframe, subject):
+def checkForError(kpi, kpitype, timeframe, subject,customerID, segmentName,productName):
     historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'purchase frequency',
                      'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
@@ -431,13 +498,15 @@ def checkForError(kpi, kpitype, timeframe, subject):
             pt and kpitype and (kpi == "churn rate" or kpi == "lifetime duration"):
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     else:
-        if kpitype:
-            speech = "Here is the list for the " + kpitype + " " + kpi + " for each " + subject + " for the " + \
-                     timeframe + ":"
-        elif kpi == "most profitable customers" or kpi == "least profitable customers":
-            speech = "Here is the list for the " + kpi + " for the " + timeframe
-        else:
-            speech = "Here is the list for the " + kpi + " for each " + subject + " for the " + timeframe + ":"
+        if subject == "customer":
+            speech = returnFormatCustomer(subject, kpi, timeframe, customerID)
+        elif subject == "segment":
+            speech = returnFormatSegment(subject, kpi, kpitype, timeframe, segmentName)
+        elif subject == "enterprise":
+            speech = returnFormatEnterprise(subject,kpi,kpitype,timeframe)
+        elif subject == "product":
+            speech = returnFormatProduct(subject, kpi, timeframe, productName)
+
 
     print("Response:")
     print(speech)
@@ -476,6 +545,38 @@ def getTimeframe(req):
     speech = "I just need one last piece of information. What timeframe would you like to see this information for? " \
              "If you do not know, type 'options for a list of options"
     return returnStatement(speech)
+
+def returnFormatCustomer(subject,kpi,timeframe,customerID):
+    speech = "Okay, here we go: \n" \
+             "The " + kpi + " for " + subject + " " +  customerID + " for the " + timeframe + ": $100.00\n" \
+                "Would you like to see another KPI? "
+
+    return speech
+
+def returnFormatSegment(subject,kpi,kpitype, timeframe,segmentName):
+    speech = "Okay, here we go: \n" \
+             "The " + kpitype + " " + kpi + " for " + subject + " " + segmentName +\
+             " for the " + timeframe + ": $100.00\n"\
+                "Would you like to see another KPI? "
+
+    return speech
+
+def returnFormatEnterprise(subject, kpi, kpitype, timeframe):
+    speech = "Okay, here we go: \n" \
+             "The " + kpitype + " " + kpi + " for " + subject + " " +\
+             " for the " + timeframe + ": $100.00\n"\
+                "Would you like to see another KPI? "
+
+    return speech
+
+def returnFormatProduct(subject,kpi,timeframe,productName):
+    speech = "Okay, here we go: \n" \
+             "The " + " " + kpi + " for " + subject + " " + productName + \
+             " for the " + timeframe + ": $100.00\n" \
+                                       "Would you like to see another KPI? "
+
+    return speech
+
 
 #more required webhook code
 if __name__ == '__main__':
