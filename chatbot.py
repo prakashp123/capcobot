@@ -295,7 +295,7 @@ def getCustomerID(req):
     subject = parameters.get("subject")
     customerID = parameters.get("customerID")
     number = parameters.get("number")
-    if subject == "customer" and customerID and number.isnumeric() and number.length()==5:
+    if subject == "customer" and customerID and number >= 0 and number <100000:
         speech = "Okay. What KPI are you interested in seeing? " \
                  "If you do not know, type 'options for a list of options"
     else:
