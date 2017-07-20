@@ -56,6 +56,7 @@ def processRequest(req):
                   and req.get("result").get("action") != "getTimeframe" \
                   and req.get("result").get("action") != "getFaultyInput" \
                   and req.get("result").get("action") != "getCustomerID" \
+                  and req.get("result").get("action") != "getSegmentName" \
                   and req.get("result").get("action") != "passwordWelcome"):
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
@@ -83,6 +84,8 @@ def processRequest(req):
         res = welcomeAbout(req)
     elif req.get("result").get("action") == "getCustomerID":
         res = getCustomerID(req)
+    elif req.get("result").get("action") == "getSegmentName":
+        res = getSegmentName(req)
     elif req.get("result").get("action") == "getFilterAnswer":
         res = getFilterAnswerWebhook(req)
     elif req.get("result").get("action") == "getTimeFilterAnswer":
@@ -270,7 +273,7 @@ def getSubjectFilterAnswerWebhook(req):
     if options and timeframe:
         speech = "Your options are 'customer'\n 'segment'\n 'enterprise'\n 'product. "
     elif subject == "customer":
-        speech = "Okay. What is the customer ID? "
+        speech = "Okay. What is the customer ID? The acceptable format is IDXXXXX"
     elif subject == "segment":
         speech = "Okay. What is the segment name?"
     elif subject == "enterprise":
@@ -301,7 +304,6 @@ def getCustomerID(req):
 
     return returnStatement(speech)
 
-'''
 def getSegmentName(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -316,7 +318,7 @@ def getSegmentName(req):
 
     return returnStatement(speech)
 
-
+'''
 def getProductName(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -333,7 +335,8 @@ def getProductName(req):
 '''
 
 
-# takes the timeframe and subject and kpi information and determines whether to ask for average/sum or call checkforError
+# takes the timeframe and subject and kpi information and determines
+# whether to ask for average/sum or call checkforError
 def getKpiFilterAnswer(req):
     result = req.get("result")
     parameters = result.get("parameters")
