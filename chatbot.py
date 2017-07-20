@@ -37,7 +37,7 @@ def webhook():
 # checks the request to see if it is valid - outputs nothing if no request action is found
 def processRequest(req):
     context = req.get("result").get("contexts")
-    if not context:
+    if context == []:
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
         return returnStatement(speech)
@@ -55,6 +55,7 @@ def processRequest(req):
                   and req.get("result").get("action") != "getSubject" \
                   and req.get("result").get("action") != "getTimeframe" \
                   and req.get("result").get("action") != "getFaultyInput" \
+                  and req.get("result").get("action") != "getCustomerID" \
                   and req.get("result").get("action") != "passwordWelcome"):
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
@@ -80,6 +81,8 @@ def processRequest(req):
         res = getWelcomeAnswerWebhook(req)
     elif req.get("result").get("action") == "welcomeAbout":
         res = welcomeAbout(req)
+    elif req.get("result").get("action") == "getCustomerID":
+        res = getCustomerID(req)
     elif req.get("result").get("action") == "getFilterAnswer":
         res = getFilterAnswerWebhook(req)
     elif req.get("result").get("action") == "getTimeFilterAnswer":
@@ -282,7 +285,7 @@ def getSubjectFilterAnswerWebhook(req):
     return returnStatement(speech)
 
 
-'''
+
 def getCustomerID(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -298,7 +301,7 @@ def getCustomerID(req):
 
     return returnStatement(speech)
 
-
+'''
 def getSegmentName(req):
     result = req.get("result")
     parameters = result.get("parameters")
