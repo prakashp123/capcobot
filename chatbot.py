@@ -36,8 +36,8 @@ def webhook():
 
 # checks the request to see if it is valid - outputs nothing if no request action is found
 def processRequest(req):
-    context = req.get("result").get("context")
-    if context == []:
+    context = req.get("result").get("contexts")
+    if not context:
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
         return returnStatement(speech)
