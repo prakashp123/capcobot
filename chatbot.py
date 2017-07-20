@@ -17,7 +17,7 @@ from flask import make_response
 app = Flask(__name__)
 
 
-#required webhook code
+# required webhook code
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
@@ -33,24 +33,24 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
-#checks the request to see if it is valid - outputs nothing if no request action is found
+
+# checks the request to see if it is valid - outputs nothing if no request action is found
 def processRequest(req):
-    action = req.get("result").get("metadata")
     if (req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" \
-            and req.get("result").get("action") != "welcomeAnswer" \
-            and req.get("result").get("action") != "getFilterAnswer" \
-            and req.get("result").get("action") != "getTimeFilterAnswer" \
-            and req.get("result").get("action") != "getKpiFilterAnswer" \
-            and req.get("result").get("action") != "welcomeAbout" \
-            and req.get("result").get("action") != "getSubjectFilterAnswer" \
-            and req.get("result").get("action") != "getPassword" \
-            and req.get("result").get("action") != "getHelp" \
-            and req.get("result").get("action") != "getValue" \
-            and req.get("result").get("action") != "getKPI" \
-            and req.get("result").get("action") != "getSubject" \
-            and req.get("result").get("action") != "getTimeframe" \
-            and req.get("result").get("action") != "getFaultyInput" \
-            and req.get("result").get("action") != "passwordWelcome"):
+                and req.get("result").get("action") != "welcomeAnswer" \
+                and req.get("result").get("action") != "getFilterAnswer" \
+                and req.get("result").get("action") != "getTimeFilterAnswer" \
+                and req.get("result").get("action") != "getKpiFilterAnswer" \
+                and req.get("result").get("action") != "welcomeAbout" \
+                and req.get("result").get("action") != "getSubjectFilterAnswer" \
+                and req.get("result").get("action") != "getPassword" \
+                and req.get("result").get("action") != "getHelp" \
+                and req.get("result").get("action") != "getValue" \
+                and req.get("result").get("action") != "getKPI" \
+                and req.get("result").get("action") != "getSubject" \
+                and req.get("result").get("action") != "getTimeframe" \
+                and req.get("result").get("action") != "getFaultyInput" \
+                and req.get("result").get("action") != "passwordWelcome"):
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
         return returnStatement(speech)
@@ -89,8 +89,7 @@ def processRequest(req):
     return res
 
 
-
-#main return statement
+# main return statement
 def returnStatement(speech):
     return {
         "speech": speech,
@@ -101,7 +100,7 @@ def returnStatement(speech):
     }
 
 
-#main welcome text - asks for password
+# main welcome text - asks for password
 def getPasswordWebhook(req):
     result = req.get("result")
     action = result.get("action")
@@ -112,8 +111,9 @@ def getPasswordWebhook(req):
 
     return returnStatement(speech)
 
-#checks password to see if valid - if valid, grants access to the bot.
-#api.ai giving an error here
+
+# checks password to see if valid - if valid, grants access to the bot.
+# api.ai giving an error here
 def processPassword(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -124,7 +124,6 @@ def processPassword(req):
     else:
         speech = "This is an invalid password."
         return returnStatement(speech)
-
 
 
 # WORKING CHATBOT CODE IS BELOW
@@ -144,6 +143,7 @@ def getWelcomeWebhook(req):
 
     return returnStatement(speech)
 
+
 def welcomeAbout(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -154,6 +154,7 @@ def welcomeAbout(req):
 
     return returnStatement(speech)
 
+
 # determines whether you type 'filter' or your query
 def getWelcomeAnswerWebhook(req):
     result = req.get("result")
@@ -163,20 +164,20 @@ def getWelcomeAnswerWebhook(req):
     timeframe = parameters.get("timeframe")
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
-    customerID = parameters.get("customerID")
+    '''customerID = parameters.get("customerID")
     segmentName = parameters.get("segmentName")
     productName = parameters.get("productName")
-    yesno = parameters.get("yesno")
+    yesno = parameters.get("yesno")'''
     if (filter and kpi and kpitype and subject and timeframe) or \
             (kpi and kpitype and subject and timeframe) or \
             (kpi and timeframe and (subject == "customer" or subject == "product")):
-        speech = "Okay, here we go: "\
-                 + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+        #speech = "Okay, here we go: " \
+        #         + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
     elif filter and not (kpi or kpitype or subject or timeframe):
         speech = "I will guide you through the process to get the answers to your questions.\n" \
                  " Are you interested in historical or predictive data?"
-    elif yesno:
-        speech = "Are you interested in historical or predictive data?"
+    #elif yesno:
+     #   speech = "Are you interested in historical or predictive data?"
     else:
         speech = "I'm sorry, I did not understand your statement. " \
                  "Please enter your question or type 'options' for a list of options."
@@ -195,7 +196,7 @@ def filterAbout(req):
     return returnStatement(speech)
 
 
-#first response after filter - if you typed historical or predictive
+# first response after filter - if you typed historical or predictive
 def getFilterAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -205,12 +206,12 @@ def getFilterAnswerWebhook(req):
     kpitype = parameters.get("kpi-type")
     kpiTimeFilter = parameters.get("kpi-time-filter")
     options = parameters.get("other-options")
-    customerID = parameters.get("customerID")
+    '''customerID = parameters.get("customerID")
     segmentName = parameters.get("segmentName")
-    productName = parameters.get("productName")
+    productName = parameters.get("productName")'''
     if kpi and timeframe and subject and kpitype:
-        speech = "I have all the information I need.\n " \
-                 + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+        #speech = "I have all the information I need.\n " \
+         #        + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
     elif kpiTimeFilter == "historical":
         speech = "How far back would you like to see results from?" \
                  " If you do not know, type 'options' for a list of options"
@@ -223,7 +224,8 @@ def getFilterAnswerWebhook(req):
 
     return returnStatement(speech)
 
-#takes the timeframe you want and asks for the subject (customer, segment, etc.)
+
+# takes the timeframe you want and asks for the subject (customer, segment, etc.)
 def getTimeFilterAnswerWebhook(req):
     historicalTimeframe = ['past month', 'past week', 'today', 'past year', 'beginning of time']
     result = req.get("result")
@@ -235,22 +237,20 @@ def getTimeFilterAnswerWebhook(req):
     predictiveTimeframe = ['one month', 'three months', 'six months']
     if options:
         if kpiTimeFilter == "historical":
-            speech = "Your options are \n''" + ("' \n'".join(str(x) for x in historicalTimeframe))+ "'"
+            speech = "Your options are \n''" + ("' \n'".join(str(x) for x in historicalTimeframe)) + "'"
         else:
-            speech = "Your options are '\n''" + ("' \n'".join(str(x) for x in predictiveTimeframe))+ "'"
+            speech = "Your options are '\n''" + ("' \n'".join(str(x) for x in predictiveTimeframe)) + "'"
     elif timeframe and (kpiTimeFilter == "historical" and timeframe in historicalTimeframe) or \
             (kpiTimeFilter == "predictive" and timeframe not in historicalTimeframe):
         speech = "Okay. Would you like to see results on a customer, segment enterprise or product level?" \
                  " If you do not know, type 'options for a list of options"
     else:
         speech = "This timeframe is not valid for " + kpiTimeFilter + " data. Please enter a valid timeframe."
-        parameters["timeframe"] = ""
 
     return returnStatement(speech)
 
 
-
-#gets the subject and asks for what KPI you would like to see
+# gets the subject and asks for what KPI you would like to see
 def getSubjectFilterAnswerWebhook(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -264,8 +264,8 @@ def getSubjectFilterAnswerWebhook(req):
     elif subject == "segment":
         speech = "Okay. What is the segment name?"
     elif subject == "enterprise":
-        speech = "Okay. What KPI are you interested in seeing?" \ 
-                "If you do not know, type 'options for more options"
+        speech = "Okay. What KPI are you interested in seeing?" \
+                 "If you do not know, type 'options for more options"
     elif subject == "product":
         speech = "Okay. What is the product name?"
     else:
@@ -274,14 +274,14 @@ def getSubjectFilterAnswerWebhook(req):
 
     return returnStatement(speech)
 
-
+'''
 def getCustomerID(req):
     result = req.get("result")
     parameters = result.get("parameters")
     subject = parameters.get("subject")
     customerID = parameters.get("customerID")
-    if subject == "customer" and customerID.length() == 7 and customerID.substring(0,2) == "ID" \
-        and customerID.substring(2,customerID.length()).isnumeric():
+    if subject == "customer" and customerID.length() == 7 and customerID.substring(0, 2) == "ID" \
+            and customerID.substring(2, customerID.length()).isnumeric():
         speech = "Okay. What KPI are you interested in seeing? " \
                  "If you do not know, type 'options for a list of options"
     else:
@@ -289,6 +289,7 @@ def getCustomerID(req):
                  "Please reword, or type 'options' for a list of options."
 
     return returnStatement(speech)
+
 
 def getSegmentName(req):
     result = req.get("result")
@@ -304,6 +305,7 @@ def getSegmentName(req):
 
     return returnStatement(speech)
 
+
 def getProductName(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -317,9 +319,9 @@ def getProductName(req):
                  "Please reword, or type 'options' for a list of options."
 
     return returnStatement(speech)
+'''
 
-
-#takes the timeframe and subject and kpi information and determines whether to ask for average/sum or call checkforError
+# takes the timeframe and subject and kpi information and determines whether to ask for average/sum or call checkforError
 def getKpiFilterAnswer(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -327,25 +329,25 @@ def getKpiFilterAnswer(req):
     kpi = parameters.get("kpi")
     subject = parameters.get("subject")
     options = parameters.get("other-options")
-    customerID = parameters.get("customerID")
+    '''customerID = parameters.get("customerID")
     segmentName = parameters.get("segmentName")
-    productName = parameters.get("productName")
-    #kpi that have average or sum values
+    productName = parameters.get("productName")'''
+    # kpi that have average or sum values
     enterpriseKPI2 = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                       'non-interest revenue', 'interest revenue',
                       'future value', 'customer lifetime value', 'referral/word of mouth value']
-    #kpi that do not have average or sum values
+    # kpi that do not have average or sum values
     enterpriseKPI = ['purchase frequency', 'period since last purchase', 'product servicing fee',
                      'churn rate', 'lifetime duration']
-    #products can only access these kpi
+    # products can only access these kpi
     productKPI = ['product processing cost', 'purchase frequency', 'non-interest revenue',
                   'product servicing fee', 'churn rate']
     kpiTimeFilter = parameters.get("kpi-time-filter")
     seHistoricalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
-                      'non-interest revenue', 'interest revenue','purchase frequency',
+                       'non-interest revenue', 'interest revenue', 'purchase frequency',
                        'period since last purchase', 'product servicing fee']
-    sePredictiveKPI= ['future value', 'customer lifetime value',
-                      'referral/word of mouth value','churn rate', 'lifetime duration']
+    sePredictiveKPI = ['future value', 'customer lifetime value',
+                       'referral/word of mouth value', 'churn rate', 'lifetime duration']
     historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'purchase frequency',
                      'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
@@ -358,12 +360,13 @@ def getKpiFilterAnswer(req):
     if options:
         if subject == "enterprise" or subject == "segment":
             if kpiTimeFilter == "historical":
-                speech = "Your options are \n'" + ("' \n'".join(str(x) for x in seHistoricalKPI))+ "'"
+                speech = "Your options are \n'" + ("' \n'".join(str(x) for x in seHistoricalKPI)) + "'"
             else:
-                speech = "Your options are \n''" + ("' \n'".join(str(x) for x in sePredictiveKPI))+ "'"
+                speech = "Your options are \n''" + ("' \n'".join(str(x) for x in sePredictiveKPI)) + "'"
         elif subject == "product":
             if kpiTimeFilter == "historical":
-                speech = "Your options are \n'" + ("' \n'".join(str(x) for x in sePredictiveKPI if x != "churn rate"))+ "'"
+                speech = "Your options are \n'" + (
+                    "' \n'".join(str(x) for x in sePredictiveKPI if x != "churn rate")) + "'"
             else:
                 speech = "Your only option is 'churn rate'."
         elif subject == "customer":
@@ -376,22 +379,25 @@ def getKpiFilterAnswer(req):
             speech = "Would you like to see the average or sum value for this data?"
         elif kpi in enterpriseKPI:
             kpitype = ""
-            speech = "Okay, here you go:\n " \
-                     + checkForError(kpi, kpitype, timeframe,subject, customerID, segmentName, productName)
+            #speech = "Okay, here you go:\n " \
+             #        + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     elif subject == "product":
         if kpi in productKPI:
             kpitype = ""
-            speech = "Okay, here you go:\n "  + \
-                     checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+            #speech = "Okay, here you go:\n " + \
+             #        checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     else:
         kpitype = ""
-        speech = "Okay, here you go:\n "  + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+        #speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName,
+         #                                                productName)
 
     return returnStatement(speech)
+
 
 # makeWebhookResult is called when all parameters are given at once
 # calls checkForError to output the result
@@ -403,20 +409,22 @@ def makeWebhookResult(req):
     subject = parameters.get("subject")
     kpitype = parameters.get("kpi-type")
     typos = parameters.get("typos")
-    customerID = parameters.get("customerID")
+    '''customerID = parameters.get("customerID")
     segmentName = parameters.get("segmentName")
-    productName = parameters.get("productName")
+    productName = parameters.get("productName")'''
     if typos:
         speech = "You said the word 'value'. What kind of value? Type 'cv' for current value, 'fv' for future value, " \
-             "'rwmv' for referral/word of mouth value, or 'clv' for customer liftetime value"
+                 "'rwmv' for referral/word of mouth value, or 'clv' for customer liftetime value"
         return returnStatement(speech)
     else:
-        speech = checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+        #speech = checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+        speech = "Hi"
         return returnStatement(speech)
+
 
 # this the main output function
 # takes in all significant parameters - this is where the actual results would be outputted
-def checkForError(kpi, kpitype, timeframe, subject,customerID, segmentName,productName):
+def checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName):
     historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'purchase frequency',
                      'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
@@ -472,9 +480,9 @@ def checkForError(kpi, kpitype, timeframe, subject,customerID, segmentName,produ
                                                                                 kpi != "product servicing frequency")) \
             and not kpitype:
         speech = "Would you like to know the average results or the sum results?"
-    elif not timeframe and ((kpi and subject) or (kpi and subject and kpitype) ):
+    elif not timeframe and ((kpi and subject) or (kpi and subject and kpitype)):
         speech = "For what time period would you like to see these results?"
-    elif not subject and ((kpi and timeframe) or (kpi and kpitype and timeframe) or (kpi and kpitype) ):
+    elif not subject and ((kpi and timeframe) or (kpi and kpitype and timeframe) or (kpi and kpitype)):
         speech = "Just a little more information. Which group are you interested in?"
     elif (subject == "enterprise" or subject == "segment") and pt and (
             (kpi != 'customers with the highest probability to churn' or
@@ -499,15 +507,15 @@ def checkForError(kpi, kpitype, timeframe, subject,customerID, segmentName,produ
         elif subject == "segment":
             speech = returnFormatSegment(subject, kpi, kpitype, timeframe, segmentName)
         elif subject == "enterprise":
-            speech = returnFormatEnterprise(subject,kpi,kpitype,timeframe)
+            speech = returnFormatEnterprise(subject, kpi, kpitype, timeframe)
         elif subject == "product":
             speech = returnFormatProduct(subject, kpi, timeframe, productName)
-
 
     print("Response:")
     print(speech)
 
     return speech
+
 
 def getHelp(req):
     result = req.get('result')
@@ -518,54 +526,64 @@ def getHelp(req):
 
     return returnStatement(speech)
 
+
 def getFaultyInput(req):
     speech = "I didn't understand what you said. Check your spelling and try again."
     return returnStatement(speech)
+
 
 def getValue(req):
     speech = "You said the word 'value'. What kind of value? Type 'cv' for current value, 'fv' for future value, " \
              "'rwmv' for referral/word of mouth value, or 'clv' for customer liftetime value"
     return returnStatement(speech)
 
+
 def getSubject(req):
     speech = "I just need one last piece of information. What subject would you like to see this information for? " \
              "If you do not know, type 'options for a list of options"
     return returnStatement(speech)
+
 
 def getKPI(req):
     speech = "I just need one last piece of information. What KPI would you like to see this information for? " \
              "If you do not know, type 'options for a list of options"
     return returnStatement(speech)
 
+
 def getTimeframe(req):
     speech = "I just need one last piece of information. What timeframe would you like to see this information for? " \
              "If you do not know, type 'options for a list of options"
     return returnStatement(speech)
 
-def returnFormatCustomer(subject,kpi,timeframe,customerID):
+
+def returnFormatCustomer(subject, kpi, timeframe, customerID):
     speech = "Okay, here we go: \n" \
-             "The " + kpi + " for " + subject + " " +  customerID + " for the " + timeframe + ": $100.00\n" \
-                "Would you like to see another KPI? "
+             "The " + kpi + " for " + subject + " " + customerID + " for the " + timeframe + ": $100.00\n" \
+                                                                                             "Would you like to see " \
+                                                                                             "another KPI? "
 
     return speech
 
-def returnFormatSegment(subject,kpi,kpitype, timeframe,segmentName):
+
+def returnFormatSegment(subject, kpi, kpitype, timeframe, segmentName):
     speech = "Okay, here we go: \n" \
-             "The " + kpitype + " " + kpi + " for " + subject + " " + segmentName +\
-             " for the " + timeframe + ": $100.00\n"\
-                "Would you like to see another KPI? "
+             "The " + kpitype + " " + kpi + " for " + subject + " " + segmentName + \
+             " for the " + timeframe + ": $100.00\n" \
+                                       "Would you like to see another KPI? "
 
     return speech
+
 
 def returnFormatEnterprise(subject, kpi, kpitype, timeframe):
     speech = "Okay, here we go: \n" \
-             "The " + kpitype + " " + kpi + " for " + subject + " " +\
-             " for the " + timeframe + ": $100.00\n"\
-                "Would you like to see another KPI? "
+             "The " + kpitype + " " + kpi + " for " + subject + " " + \
+             " for the " + timeframe + ": $100.00\n" \
+                                       "Would you like to see another KPI? "
 
     return speech
 
-def returnFormatProduct(subject,kpi,timeframe,productName):
+
+def returnFormatProduct(subject, kpi, timeframe, productName):
     speech = "Okay, here we go: \n" \
              "The " + " " + kpi + " for " + subject + " " + productName + \
              " for the " + timeframe + ": $100.00\n" \
@@ -574,7 +592,7 @@ def returnFormatProduct(subject,kpi,timeframe,productName):
     return speech
 
 
-#more required webhook code
+# more required webhook code
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
