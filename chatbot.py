@@ -273,7 +273,7 @@ def getSubjectFilterAnswerWebhook(req):
     if options and timeframe:
         speech = "Your options are 'customer'\n 'segment'\n 'enterprise'\n 'product. "
     elif subject == "customer":
-        speech = "Okay. What is the customer ID? The acceptable format is IDXXXXX"
+        speech = "Okay. What is the customer ID? The acceptable format is ID XXXXX"
     elif subject == "segment":
         speech = "Okay. What is the segment name?"
     elif subject == "enterprise":
@@ -294,12 +294,12 @@ def getCustomerID(req):
     parameters = result.get("parameters")
     subject = parameters.get("subject")
     customerID = parameters.get("customerID")
-    if subject == "customer" and customerID.length() == 7 and customerID.substring(0, 2) == "ID" \
-            and customerID.substring(2, customerID.length()).isnumeric():
+    number = parameters.get("number")
+    if subject == "customer" and customerID and number.isnumeric() and number.length()==5:
         speech = "Okay. What KPI are you interested in seeing? " \
                  "If you do not know, type 'options for a list of options"
     else:
-        speech = "I'm sorry, I did not understand your statement. " \
+        speech = "This is not a valid customer ID. " \
                  "Please reword, or type 'options' for a list of options."
 
     return returnStatement(speech)
