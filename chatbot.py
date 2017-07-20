@@ -171,7 +171,8 @@ def getWelcomeAnswerWebhook(req):
     if (filter and kpi and kpitype and subject and timeframe) or \
             (kpi and kpitype and subject and timeframe) or \
             (kpi and timeframe and (subject == "customer" or subject == "product")):
-        #speech = "Okay, here we go: " \
+        speech = "hi"
+        # speech = "Okay, here we go: " \
         #         + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
     elif filter and not (kpi or kpitype or subject or timeframe):
         speech = "I will guide you through the process to get the answers to your questions.\n" \
@@ -210,7 +211,8 @@ def getFilterAnswerWebhook(req):
     segmentName = parameters.get("segmentName")
     productName = parameters.get("productName")'''
     if kpi and timeframe and subject and kpitype:
-        #speech = "I have all the information I need.\n " \
+        speech = "hi" 
+        # speech = "I have all the information I need.\n " \
          #        + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
     elif kpiTimeFilter == "historical":
         speech = "How far back would you like to see results from?" \
