@@ -36,21 +36,26 @@ def webhook():
 
 # checks the request to see if it is valid - outputs nothing if no request action is found
 def processRequest(req):
-    if (req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" \
-                and req.get("result").get("action") != "welcomeAnswer" \
-                and req.get("result").get("action") != "getFilterAnswer" \
-                and req.get("result").get("action") != "getTimeFilterAnswer" \
-                and req.get("result").get("action") != "getKpiFilterAnswer" \
-                and req.get("result").get("action") != "welcomeAbout" \
-                and req.get("result").get("action") != "getSubjectFilterAnswer" \
-                and req.get("result").get("action") != "getPassword" \
-                and req.get("result").get("action") != "getHelp" \
-                and req.get("result").get("action") != "getValue" \
-                and req.get("result").get("action") != "getKPI" \
-                and req.get("result").get("action") != "getSubject" \
-                and req.get("result").get("action") != "getTimeframe" \
-                and req.get("result").get("action") != "getFaultyInput" \
-                and req.get("result").get("action") != "passwordWelcome"):
+    context = req.get("result").get("context")
+    if context == []:
+        speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
+                 "type 'about' for more information."
+        return returnStatement(speech)
+    elif (req.get("result").get("action") != "list" and req.get("result").get("action") != "getWelcome" \
+                  and req.get("result").get("action") != "welcomeAnswer" \
+                  and req.get("result").get("action") != "getFilterAnswer" \
+                  and req.get("result").get("action") != "getTimeFilterAnswer" \
+                  and req.get("result").get("action") != "getKpiFilterAnswer" \
+                  and req.get("result").get("action") != "welcomeAbout" \
+                  and req.get("result").get("action") != "getSubjectFilterAnswer" \
+                  and req.get("result").get("action") != "getPassword" \
+                  and req.get("result").get("action") != "getHelp" \
+                  and req.get("result").get("action") != "getValue" \
+                  and req.get("result").get("action") != "getKPI" \
+                  and req.get("result").get("action") != "getSubject" \
+                  and req.get("result").get("action") != "getTimeframe" \
+                  and req.get("result").get("action") != "getFaultyInput" \
+                  and req.get("result").get("action") != "passwordWelcome"):
         speech = "I'm sorry, I could not understand what you said. Please check your spelling, or " \
                  "type 'about' for more information."
         return returnStatement(speech)
@@ -177,8 +182,8 @@ def getWelcomeAnswerWebhook(req):
     elif filter and not (kpi or kpitype or subject or timeframe):
         speech = "I will guide you through the process to get the answers to your questions.\n" \
                  " Are you interested in historical or predictive data?"
-    #elif yesno:
-     #   speech = "Are you interested in historical or predictive data?"
+        # elif yesno:
+        #   speech = "Are you interested in historical or predictive data?"
     else:
         speech = "I'm sorry, I did not understand your statement. " \
                  "Please enter your question or type 'options' for a list of options."
@@ -211,9 +216,9 @@ def getFilterAnswerWebhook(req):
     segmentName = parameters.get("segmentName")
     productName = parameters.get("productName")'''
     if kpi and timeframe and subject and kpitype:
-        speech = "hi" 
+        speech = "hi"
         # speech = "I have all the information I need.\n " \
-         #        + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+        #        + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
     elif kpiTimeFilter == "historical":
         speech = "How far back would you like to see results from?" \
                  " If you do not know, type 'options' for a list of options"
@@ -276,6 +281,7 @@ def getSubjectFilterAnswerWebhook(req):
 
     return returnStatement(speech)
 
+
 '''
 def getCustomerID(req):
     result = req.get("result")
@@ -322,6 +328,7 @@ def getProductName(req):
 
     return returnStatement(speech)
 '''
+
 
 # takes the timeframe and subject and kpi information and determines whether to ask for average/sum or call checkforError
 def getKpiFilterAnswer(req):
@@ -381,22 +388,22 @@ def getKpiFilterAnswer(req):
             speech = "Would you like to see the average or sum value for this data?"
         elif kpi in enterpriseKPI:
             kpitype = ""
-            #speech = "Okay, here you go:\n " \
-             #        + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+            # speech = "Okay, here you go:\n " \
+            #        + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     elif subject == "product":
         if kpi in productKPI:
             kpitype = ""
-            #speech = "Okay, here you go:\n " + \
-             #        checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+            # speech = "Okay, here you go:\n " + \
+            #        checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
 
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     else:
         kpitype = ""
-        #speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName,
-         #                                                productName)
+        # speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName,
+        #                                                productName)
 
     return returnStatement(speech)
 
@@ -419,7 +426,7 @@ def makeWebhookResult(req):
                  "'rwmv' for referral/word of mouth value, or 'clv' for customer liftetime value"
         return returnStatement(speech)
     else:
-        #speech = checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+        # speech = checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
         speech = "Hi"
         return returnStatement(speech)
 
