@@ -295,14 +295,13 @@ def getCustomerID(req):
     subject = parameters.get("subject")
     customerID = parameters.get("customerID")
     number = parameters.get("number")
-    '''if subject == "customer" and number < 100000 and number >-1:
+    sNumber = int(number)
+    if subject == "customer" and sNumber < 100000 and sNumber >-1:
         speech = "Okay. What KPI are you interested in seeing? " \
                  "If you do not know, type 'options for a list of options"
     else:
         speech = "This is not a valid customer ID. " \
-                 "Please reword, or type 'options' for a list of options."'''
-
-    speech = "Hi"
+                 "Please reword, or type 'options' for a list of options."
 
     return returnStatement(speech)
 
