@@ -518,7 +518,7 @@ def checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, pro
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     else:
         if subject == "customer":
-            speech = returnFormatCustomer(subject, kpi, timeframe, customerID)
+            speech = returnFormatCustomer(subject, kpi, timeframe, customerID, number)
         elif subject == "segment":
             speech = returnFormatSegment(subject, kpi, kpitype, timeframe, segmentName)
         elif subject == "enterprise":
@@ -571,9 +571,9 @@ def getTimeframe(req):
     return returnStatement(speech)
 
 
-def returnFormatCustomer(subject, kpi, timeframe, customerID):
+def returnFormatCustomer(subject, kpi, timeframe, customerID,number):
     speech = "Okay, here we go: \n" \
-             "The " + kpi + " for " + subject + " " + customerID + " for the " + timeframe + ": $100.00\n" \
+             "The " + kpi + " for " + subject + " " + customerID + " " + number + " for the " + timeframe + ": $100.00\n" \
                                                                                              "Would you like to see " \
                                                                                              "another KPI? "
 
