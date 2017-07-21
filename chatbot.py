@@ -345,9 +345,9 @@ def getKpiFilterAnswer(req):
     kpi = parameters.get("kpi")
     subject = parameters.get("subject")
     options = parameters.get("other-options")
-    '''customerID = parameters.get("customerID")
-    segmentName = parameters.get("segmentName")
-    productName = parameters.get("productName")'''
+    customerID = parameters.get("customerID")
+    segmentName = ""
+    productName = ""
     # kpi that have average or sum values
     enterpriseKPI2 = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                       'non-interest revenue', 'interest revenue',
@@ -395,22 +395,21 @@ def getKpiFilterAnswer(req):
             speech = "Would you like to see the average or sum value for this data?"
         elif kpi in enterpriseKPI:
             kpitype = ""
-            # speech = "Okay, here you go:\n " \
-            #        + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
+            speech = "Okay, here you go:\n " \
+                    + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     elif subject == "product":
         if kpi in productKPI:
             kpitype = ""
-            # speech = "Okay, here you go:\n " + \
-            #        checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
-
+            speech = "Okay, here you go:\n " + \
+                    checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName)
         else:
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     else:
         kpitype = ""
-        # speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName,
-        #                                                productName)
+        speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName,
+                                                        productName)
 
     return returnStatement(speech)
 
