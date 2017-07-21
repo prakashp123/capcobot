@@ -346,7 +346,8 @@ def getKpiFilterAnswer(req):
     subject = parameters.get("subject")
     options = parameters.get("other-options")
     customerID = parameters.get("customerID")
-    number = int(parameters.get("number"))
+    snumber = parameters.get("number")
+    number = int(snumber)
     segmentName = ""
     productName = ""
     # kpi that have average or sum values
