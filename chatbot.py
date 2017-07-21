@@ -346,6 +346,7 @@ def getKpiFilterAnswer(req):
     subject = parameters.get("subject")
     options = parameters.get("other-options")
     customerID = parameters.get("customerID")
+    number = int(parameters.get("number"))
     segmentName = ""
     productName = ""
     # kpi that have average or sum values
@@ -408,7 +409,7 @@ def getKpiFilterAnswer(req):
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     else:
         kpitype = ""
-        speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName,
+        speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, number, segmentName,
                                                         productName)
 
     return returnStatement(speech)
@@ -439,7 +440,7 @@ def makeWebhookResult(req):
 
 # this the main output function
 # takes in all significant parameters - this is where the actual results would be outputted
-def checkForError(kpi, kpitype, timeframe, subject, customerID, segmentName, productName):
+def checkForError(kpi, kpitype, timeframe, subject, customerID, number, segmentName, productName):
     historicalKPI = ['acquisition cost', 'current value', 'retention cost', 'product processing cost',
                      'purchase frequency',
                      'period since last purchase', 'non-interest revenue', 'interest revenue', 'product servicing fee']
