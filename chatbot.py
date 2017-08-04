@@ -347,7 +347,7 @@ def getKpiFilterAnswer(req):
     options = parameters.get("other-options")
     customerID = parameters.get("customerID")
     snumber = parameters.get("number")
-    number = int(snumber)
+    strnumber = int(snumber)
     segmentName = ""
     productName = ""
     # kpi that have average or sum values
@@ -375,6 +375,11 @@ def getKpiFilterAnswer(req):
                      'customers with the highest referral/word of mouth value',
                      'customers with the longest predicted lifetime duration',
                      'churn rate', 'lifetime duration']
+    if kpi and timeframe and (subject == "customer" or subject == "product"):
+        kpitype = ""
+        speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, strnumber,
+                                                         segmentName,
+                                                         productName)
     if options:
         if subject == "enterprise" or subject == "segment":
             if kpiTimeFilter == "historical":
@@ -410,7 +415,7 @@ def getKpiFilterAnswer(req):
             speech = "The data is not supported for this subject. Please enter a different subject to view this data."
     else:
         kpitype = ""
-        speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, number, segmentName,
+        speech = "Okay, here you go:\n " + checkForError(kpi, kpitype, timeframe, subject, customerID, strnumber, segmentName,
                                                         productName)
 
     return returnStatement(speech)
@@ -520,7 +525,10 @@ def checkForError(kpi, kpitype, timeframe, subject, customerID, number, segmentN
         speech = "This is an invalid statement. Are you interested in statistics about " + subject + "?"
     else:
         if subject == "customer":
-            speech = returnFormatCustomer(subject, kpi, timeframe, customerID, number)
+            speech = speech = "Okay, here we go: \n" \
+             "The " + kpi + " for " + subject + " " + customerID + " " + number + " for the " + timeframe + ": $100.00\n" \
+                                                                                             "Would you like to see " \
+                                                                                             "another KPI? "
         elif subject == "segment":
             speech = returnFormatSegment(subject, kpi, kpitype, timeframe, segmentName)
         elif subject == "enterprise":
